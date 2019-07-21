@@ -1,7 +1,4 @@
 #include "RoboteqSerial.hpp"
-#include <string>
-#include <iostream>
-
 
 RoboteqSerial::RoboteqSerial(Stream &stream)
     : _serial(stream)
@@ -87,7 +84,8 @@ int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
     return brushlessCountRelative;
 }
 
-int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel) {
+int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
+{
     String data = this->concatenateMessage("?BS ", channel);
     this->sendQuery(data.c_str());
 
@@ -95,7 +93,8 @@ int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel) {
     return motorSpeedInRpm;
 }
 
-int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel) {
+int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel)
+{
     String data = this->concatenateMessage("?C", channel);
     this->sendQuery(data.c_str());
 
@@ -103,12 +102,219 @@ int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel) {
     return encoderCounterAbsolute;
 }
 
-uint16_t RoboteqSerial::readRawCanFrame() {
-    String data = "?CAN\r\n";
-    this->sendQuery(data.c_str());
+// ?CB
+int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel)
+{
+}
 
-    uint16_t rawCanFrame = this->readQuery("CAN=");
-    return rawCanFrame;;
+// ?CF
+uint8_t RoboteqSerial::readRawCanReceivedFramesCount()
+{
+}
+
+// ?CIA
+int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel)
+{
+}
+
+// ?CIP
+int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel)
+{
+}
+
+// ?CIS
+int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel)
+{
+}
+
+// ?CL
+uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t channel)
+{
+}
+
+// ?CR
+int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel)
+{
+}
+
+// ?D
+uint32_t RoboteqSerial::readDigitalInputs()
+{
+}
+
+// ?DI
+uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber)
+{
+}
+
+// ?DO
+uint16_t RoboteqSerial::readDigitalOutputStatus()
+{
+}
+
+// ?DR
+uint8_t RoboteqSerial::readDestinationReached(uint8_t channel)
+{
+}
+
+// ?E
+int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
+{
+}
+
+// ?F
+int16_t RoboteqSerial::readFeedback(uint8_t channel)
+{
+}
+
+// ?FC
+int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
+{
+}
+
+// ?FID
+String RoboteqSerial::readFirmwareID()
+{
+}
+
+// ?FM
+int16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
+{
+}
+
+// ?FS
+uint8_t RoboteqSerial::readStatusFlag()
+{
+}
+
+// ?HS
+uint8_t RoboteqSerial::readHallSensorStates(uint8_t channel)
+{
+}
+
+// ?ICL
+uint8_t RoboteqSerial::isRoboCanNodeAlive(uint8_t nodeID)
+{
+}
+
+// ?K
+uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
+{
+}
+
+// ?LK
+uint8_t RoboteqSerial::readLockStatus()
+{
+}
+
+// ?M
+uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
+{
+}
+
+// ?MA
+int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(uint8_t channel)
+{
+}
+
+// ?MGD
+uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
+{
+}
+
+// ?MGM
+uint8_t RoboteqSerial::readMagsensorMarkers(uint8_t channel)
+{
+}
+
+// ?MGS
+int16_t RoboteqSerial::readMagsensorStatus()
+{
+}
+
+// ?MGT
+int16_t RoboteqSerial::readMagsensorTrackPosition(uint8_t channel)
+{
+}
+
+// ?MGY
+int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel)
+{
+}
+
+// ?P
+int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel)
+{
+}
+
+// ?PI
+uint16_t RoboteqSerial::readPulseInput(uint8_t channel)
+{
+}
+
+// ?PIC
+int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel)
+{
+}
+
+// ?S
+int16_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
+{
+}
+
+// ?SCC
+uint32_t RoboteqSerial::readScriptChecksum()
+{
+}
+
+// ?SR
+int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
+{
+}
+
+// ?T
+int8_t RoboteqSerial::readTemperature(uint8_t channel)
+{
+}
+
+// ?TM
+uint32_t RoboteqSerial::readTime(uint8_t dataElementInNewControllerModel)
+{
+}
+
+// ?TR
+int32_t RoboteqSerial::readPositionRelativeTracking(uint8_t channel)
+{
+}
+
+// ?TRN
+String RoboteqSerial::readControlUnitTypeAndControllerModel()
+{
+}
+
+// ?UID
+uint32_t RoboteqSerial::readMcuID(uint8_t dataElement)
+{
+}
+
+// ?V[ee]
+uint16_t RoboteqSerial::readVolts(uint8_t dataElement)
+{
+}
+
+// ?V
+uint16_t RoboteqSerial::readVolts()
+{
+}
+
+// ?VAR
+int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber)
+{
+}
+
+// ?SL
+int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
+{
 }
 
 String RoboteqSerial::concatenateMessage(const char *message, int value)
@@ -118,6 +324,16 @@ String RoboteqSerial::concatenateMessage(const char *message, int value)
     data += "\r\n";
 
     return data;
+}
+
+uint16_t RoboteqSerial::readRawCanFrame()
+{
+    String data = "?CAN\r\n";
+    this->sendQuery(data.c_str());
+
+    uint16_t rawCanFrame = this->readQuery("CAN=");
+    return rawCanFrame;
+    ;
 }
 
 int RoboteqSerial::sendQuery(const char *message)
