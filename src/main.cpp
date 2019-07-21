@@ -16,51 +16,8 @@ void setup()
 
 void loop()
 {
-  int s = mcu.queryFaultFlags();
-  int b = mcu.queryVoltage();
+  //int s = mcu.readFaultFlags();
+  //int b = mcu.readVoltage();
 
-  Serial.print("Fault flag: ");
-  Serial.println(s);
-  Serial.print("Battery: ");
-  Serial.println(b);
-  // Serial1.println("?FF");
-  // Serial1.flush();
-  // delay(20);
-  // if (stringComplete)
-  // {
-  //   int s = bitRead(16, 5);
-  //   value = inputString.toInt();
-
-  //   Serial.println(inputString.toInt());
-
-  //   inputString = "";
-  //   stringComplete = false;
-  // }
+  Serial.println(mcu.readBrushlessCountRelative(1));
 }
-
-// void serialEvent1()
-// {
-//   while (Serial1.available())
-//   {
-//     // get the new byte:
-//     char inChar = (char)Serial1.read();
-//     // add it to the inputString:
-//     inputString += inChar;
-//     // if the incoming character is a newline, set a flag so the main loop can
-//     // do something about it:
-//     if (inChar == 0x0D)
-//     {
-
-//       stringComplete = true;
-//     }
-//   }
-// }
-
-// void serialEvent1()
-// {
-//   while (Serial1.available())
-//   {
-//     inputString = Serial1.readStringUntil(0x0D);
-//   }
-//   Serial.println(inputString);
-// }
