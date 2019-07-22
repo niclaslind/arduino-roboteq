@@ -16,8 +16,5 @@ void setup()
 
 void loop()
 {
-  //int s = mcu.readFaultFlags();
-  //int b = mcu.readVoltage();
-
   Serial.println(mcu.readBrushlessCountRelative(1));
 }
