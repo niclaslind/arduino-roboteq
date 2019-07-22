@@ -1,361 +1,505 @@
 #include "RoboteqSerial.hpp"
 
+
 RoboteqSerial::RoboteqSerial(Stream &stream)
     : _serial(stream)
 {
 }
 
+/**
+ * @return: fault flags as a byte, each bit is a faultflag
+ */
 int16_t RoboteqSerial::readFaultFlags()
 {
-    this->sendQuery("?FF\r\n");
-
-    int16_t faultflag = this->readQuery("FF=");
-    return faultflag;
+    return this->handleQueryRequestToInt(RoboteqCommands::readFaulFlagQuery, RoboteqCommands::readFaultFlagRespond);
 }
 
+/**
+ * @return: voltage of all voltage in Roboteq
+ */
 int16_t RoboteqSerial::readVoltage()
 {
-    this->sendQuery("?V 2\r\n");
-
-    int16_t voltage = this->readQuery("V=");
-    return voltage;
+    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond);
 }
 
+/**
+ * @params: uint8_t channel: Motor Channel
+ * @return: current motor amp of channel
+ */
 int16_t RoboteqSerial::readMotorAmps(uint8_t channel)
 {
-    String data = this->concatenateMessage("?A ", channel);
-    this->sendQuery(data.c_str());
-
-    int16_t motorAmps = this->readQuery("A=");
-    return motorAmps;
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorAmpsQuery, channel, RoboteqCommands::readMotorAmpsRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readAnalogInput(uint8_t channel)
 {
-    String data = this->concatenateMessage("?AIC ", channel);
-    this->sendQuery(data.c_str());
-
-    int16_t analogInput = this->readQuery("AIC=");
-    return analogInput;
+    return this->handleQueryRequestToInt(RoboteqCommands::readAnalogInputQuery, channel, RoboteqCommands::readAnalogInputRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
 {
-    String data = this->concatenateMessage("?ANG ", channel);
-    this->sendQuery(data.c_str());
-
-    uint16_t rotorAngle = this->readQuery("ANG=");
-    return rotorAngle;
+    return this->handleQueryRequestToInt(RoboteqCommands::readRotorAngleQuery, channel, RoboteqCommands::readRotorAngleRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint16_t RoboteqSerial::readRawSinCosSensor(uint8_t channel)
 {
-    String data = this->concatenateMessage("?ASI ", channel);
-    this->sendQuery(data.c_str());
-
-    uint16_t rawSinCosSensor = this->readQuery("ASI=");
-    return rawSinCosSensor;
+    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, channel, RoboteqCommands::readRotorAngleRespond);
 }
 
-uint8_t RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable)
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
+bool RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable)
 {
-    String data = this->concatenateMessage("?B ", booleanVariable);
-    this->sendQuery(data.c_str());
-
-    uint8_t userBoolean = this->readQuery("B=");
-    return userBoolean;
+    return (bool)this->handleQueryRequestToInt(RoboteqCommands::readUserBooleanValueQuery, booleanVariable, RoboteqCommands::readUserBooleanValueRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readBatteryAmps(uint8_t channel)
 {
-    String data = this->concatenateMessage("?BA ", channel);
-    this->sendQuery(data.c_str());
-
-    int16_t batteryAmps = this->readQuery("BA=");
-    return batteryAmps;
+    return this->handleQueryRequestToInt(RoboteqCommands::readBatteryAmpsQuery, channel, RoboteqCommands::readBatteryAmpsRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
 {
-    String data = this->concatenateMessage("?BCR ", channel);
-    this->sendQuery(data.c_str());
-
-    int32_t brushlessCountRelative = this->readQuery("BCR=");
-    return brushlessCountRelative;
+    return this->handleQueryRequestToInt(RoboteqCommands::readBatteryAmpsQuery, channel, RoboteqCommands::readBatteryAmpsRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
 {
-    String data = this->concatenateMessage("?BS ", channel);
-    this->sendQuery(data.c_str());
-
-    int16_t motorSpeedInRpm = this->readQuery("BS=");
-    return motorSpeedInRpm;
+    return this->handleQueryRequestToInt(RoboteqCommands::readBlMotorSpeedInRpmQuery, channel, RoboteqCommands::readBlMotorSpeedInRpmRespond);
 }
 
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel)
 {
-    String data = this->concatenateMessage("?C", channel);
-    this->sendQuery(data.c_str());
-
-    int32_t encoderCounterAbsolute = this->readQuery("C=");
-    return encoderCounterAbsolute;
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderCounterAbsolutQuery, channel, RoboteqCommands::readEncoderCounterAbsolutRespond);
 }
 
-// ?CB
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readAbsolutBrushlessCounterQuery, channel, RoboteqCommands::readAbsolutBrushlessCounterRespond);
 }
 
-// ?CF
 uint8_t RoboteqSerial::readRawCanReceivedFramesCount()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readRawCanRecivedFramesCountQuery, RoboteqCommands::readRawCanRecivedFramesCountRespond);
 }
 
-// ?CIA
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readConvertedAnalogCommandQuery, channel, RoboteqCommands::readConvertedAnalogCommandRespond);
 }
 
-// ?CIP
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readInternalPulseCommandQuery, channel, RoboteqCommands::readInternalPulseCommandRespond);
 }
 
-// ?CIS
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readInternalSerialCommandQuery, channel, RoboteqCommands::readInternalSerialCommandRespond);
 }
 
-// ?CL
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readRoboCanAliveNodesMapQuery, channel, RoboteqCommands::readRoboCanAliveNodesMapRespond);
 }
 
-// ?CR
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderCountRelativeQuery, channel, RoboteqCommands::readEncoderCountRelativeRespond);
 }
 
-// ?D
 uint32_t RoboteqSerial::readDigitalInputs()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readDigitalInputsQuery, RoboteqCommands::readDigitalInputsRespond);
 }
 
-// ?DI
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readIndividualDigitalInputsQuery, digitalInputNumber, RoboteqCommands::readIndividualDigitalInputsRespond);
 }
 
-// ?DO
 uint16_t RoboteqSerial::readDigitalOutputStatus()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readDigitalOutputStatusQuery, RoboteqCommands::readDigitalOutputStatusRespond);
 }
 
-// ?DR
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::readDestinationReached(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readDestinationReachedQuery, channel, RoboteqCommands::readDestinationReachedRespond);
 }
 
-// ?E
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readClosedLoopErrorQuery, channel, RoboteqCommands::readClosedLoopErrorRespond);
 }
 
-// ?F
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readFeedback(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readFeedbackQuery, channel, RoboteqCommands::readFeedbackRespond);
 }
 
-// ?FC
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readFocAngleAdjustQuery, channel, RoboteqCommands::readFocAngleAdjustRespond);
 }
 
-// ?FID
 String RoboteqSerial::readFirmwareID()
 {
+    return this->handleQueryRequest(RoboteqCommands::readFirmwareIDQuery, RoboteqCommands::readFirmwareIDRespond);
 }
 
-// ?FM
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readRuntimeStatusFlagQuery, channel, RoboteqCommands::readRuntimeStatusFlagRespond);
 }
 
-// ?FS
 uint8_t RoboteqSerial::readStatusFlag()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readStatusFlagQuery, RoboteqCommands::readStatusFlagRespond);
 }
 
-// ?HS
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::readHallSensorStates(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readHallSensorStatesQuery, channel, RoboteqCommands::readHallSensorStatesRespond);
 }
 
-// ?ICL
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::isRoboCanNodeAlive(uint8_t nodeID)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::isRoboCanNodeAliveQuery, nodeID, RoboteqCommands::isRoboCanNodeAliveRespond);
 }
 
-// ?K
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readSpektrumReceiverQuery, radioChannel, RoboteqCommands::readSpektrumReceiverRespond);
 }
 
-// ?LK
 uint8_t RoboteqSerial::readLockStatus()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readLockStatusQuery, RoboteqCommands::readLockStatusRespond);
 }
 
-// ?M
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorCommandAppliedQuery, channel, RoboteqCommands::readMotorCommandAppliedRespond);
 }
 
-// ?MA
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, channel, RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
 }
 
-// ?MGD
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackDetectQuery, channel, RoboteqCommands::readMagsensorTrackDetectRespond);
 }
 
-// ?MGM
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint8_t RoboteqSerial::readMagsensorMarkers(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, channel, RoboteqCommands::readMagsensorMarkersRespond);
 }
 
-// ?MGS
 int16_t RoboteqSerial::readMagsensorStatus()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorStatusQuery, RoboteqCommands::readMagsensorStatusRespond);
 }
 
-// ?MGT
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readMagsensorTrackPosition(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, channel, RoboteqCommands::readMagsensorTrackPositionRespond);    
 }
 
-// ?MGY
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorGyroscopeQuery, channel, RoboteqCommands::readMagsensorGyroscopeRespond);
 }
 
-// ?P
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorPowerOutputAppliedQuery, channel, RoboteqCommands::readMotorPowerOutputAppliedRespond);
 }
 
-// ?PI
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint16_t RoboteqSerial::readPulseInput(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readPulseInputQuery, channel, RoboteqCommands::readPulseInputRespond);
 }
 
-// ?PIC
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readPulseInputAfterConversionQuery, channel, RoboteqCommands::readPulseInputAfterConversionRespond);
 }
 
-// ?S
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderMotorSpeedInRpmQuery, channel, RoboteqCommands::readEncoderMotorSpeedInRpmRespond);
 }
 
-// ?SCC
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint32_t RoboteqSerial::readScriptChecksum()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readScriptChecksumQuery, RoboteqCommands::readScriptChecksumRespond);
 }
 
-// ?SR
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderSpeedRelativeQuery, channel, RoboteqCommands::readEncoderSpeedRelativeRespond);
 }
 
-// ?T
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int8_t RoboteqSerial::readTemperature(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, channel, RoboteqCommands::readTemperatureRespond);
 }
 
-// ?TM
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint32_t RoboteqSerial::readTime(uint8_t dataElementInNewControllerModel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery,  RoboteqCommands::readTimeRespond);
 }
 
-// ?TR
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int32_t RoboteqSerial::readPositionRelativeTracking(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readPositionRelativeTrackingQuery, channel, RoboteqCommands::readPositionRelativeTrackingRespond);
 }
 
-// ?TRN
 String RoboteqSerial::readControlUnitTypeAndControllerModel()
 {
+    return this->handleQueryRequest(RoboteqCommands::readControlUnitTypeAndControllerModelQuery, RoboteqCommands::readControlUnitTypeAndControllerModelRespond);
 }
 
-// ?UID
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint32_t RoboteqSerial::readMcuID(uint8_t dataElement)
-{
+{    
+    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, dataElement, RoboteqCommands::readMcuIDRespond);
 }
 
-// ?V[ee]
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 uint16_t RoboteqSerial::readVolts(uint8_t dataElement)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, dataElement, RoboteqCommands::readVoltsRespond);
 }
 
-// ?V
 uint16_t RoboteqSerial::readVolts()
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond);
 }
 
-// ?VAR
 int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readUserIntegerVariableQuery, variableNumber, RoboteqCommands::readUserIntegerVariableRespond);
 }
 
-// ?SL
+/**
+ * @params: uint8_t channel: MotorChannel
+ * @return: 
+ */
 int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
 {
+    return this->handleQueryRequestToInt(RoboteqCommands::readSlipFrequencyQuery, channel, RoboteqCommands::readSlipFrequencyRespond);
 }
 
-String RoboteqSerial::concatenateMessage(const char *message, int value)
-{
-    String data = message;
-    data += value;
-    data += "\r\n";
-
-    return data;
-}
-
-uint16_t RoboteqSerial::readRawCanFrame()
-{
-    String data = "?CAN\r\n";
-    this->sendQuery(data.c_str());
-
-    uint16_t rawCanFrame = this->readQuery("CAN=");
-    return rawCanFrame;
-    ;
-}
-
-int RoboteqSerial::sendQuery(const char *message)
+void RoboteqSerial::sendQuery(const char *message)
 {
     this->_serial.write(message, strlen(message));
     this->_serial.flush();
-
-    return 0;
 }
 
-int RoboteqSerial::readQuery(const char *message)
+String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
+{
+    String query = queryMessage;
+    query += String(extraParameter);
+    query += "_";
+
+    this->sendQuery(query.c_str());
+    return this->readQuery(respondMessage);
+}
+
+String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *respondMessage)
+{
+    this->sendQuery(queryMessage);
+    return this->readQuery(respondMessage);
+}
+
+int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage)
+{
+    this->sendQuery(queryMessage);
+    return this->readQuery(respondMessage).toInt();
+}
+
+int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
+{
+    String query = queryMessage;
+    query += String(extraParameter);
+    query += "_";
+
+    this->sendQuery(query.c_str());
+    return this->readQuery(respondMessage).toInt();
+}
+
+String RoboteqSerial::readQuery(const char *message)
 {
     String inputString;
     unsigned long startTime = millis();
-    while (millis() - startTime < timeout && _serial.available())
+    while (millis() - startTime < _timeout && _serial.available())
     {
         inputString = _serial.readStringUntil('\r');
 
         if (inputString.startsWith(message))
         {
-            return inputString.substring(inputString.indexOf("=") + 1).toInt();
+            return inputString.substring(inputString.indexOf("=") + 1);
         }
     }
-    return -1;
+    return "-1";
 }

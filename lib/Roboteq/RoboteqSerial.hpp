@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <Stream.h>
+#include "RoboteqAPICommands.hpp"
 
 class RoboteqSerial
 {
@@ -15,8 +16,8 @@ public:
     int16_t readAnalogInput(uint8_t channel);
     uint16_t readRotorAngle(uint8_t channel);
     uint16_t readRawSinCosSensor(uint8_t channel);
-    uint8_t readUserBooleanValue(uint8_t booleanVariable);
-    int16_t readBatteryAmps (uint8_t channel);
+    bool readUserBooleanValue(uint8_t booleanVariable);
+    int16_t readBatteryAmps(uint8_t channel);
     int32_t readBrushlessCountRelative(uint8_t channel);
     int16_t readBLMotorSpeedInRpm(uint8_t channel);
     int32_t readEncoderCounterAbsolut(uint8_t channel);
@@ -36,6 +37,7 @@ public:
     int16_t readFeedback(uint8_t channel);
     int16_t readFocAngleAdjust(uint8_t channel);
     String readFirmwareID();
+    int16_t readRuntimeStatusFlag(uint8_t channel);
     int16_t raedRuntimeStatusFlag(uint8_t channel);
     uint8_t readStatusFlag();
     uint8_t readHallSensorStates(uint8_t channel);
@@ -55,22 +57,27 @@ public:
     int16_t readEncoderMotorSpeedInRpm(uint8_t channel);
     uint32_t readScriptChecksum();
     int16_t readEncoderSpeedRelative(uint8_t channel);
-    int8_t readTemperature(uint8_t  channel);
+    int8_t readTemperature(uint8_t channel);
     uint32_t readTime(uint8_t dataElementInNewControllerModel);
     int32_t readPositionRelativeTracking(uint8_t channel);
     String readControlUnitTypeAndControllerModel();
     uint32_t readMcuID(uint8_t dataElement);
-    uint16_t readVolts(uint8_t dataElement);    
+    uint16_t readVolts(uint8_t dataElement);
     uint16_t readVolts();
     int32_t readUserIntegerVariable(uint8_t variableNumber);
     int16_t readSlipFrequency(uint8_t channel);
 
 private:
-    String concatenateMessage(const char * message, int value);
-    int readQuery(const char *message);
-    int sendQuery(const char *message);
+    void sendQuery(const char *message);
+    
+    String readQuery(const char *message);
+    String handleQueryRequest(const char * queryMessage, uint8_t extraParameter, const char* respondMessage);
+    String handleQueryRequest(const char * queryMessage, const char * respondMessage);
+
+    int handleQueryRequestToInt(const char * queryMessage, uint8_t extraParameter, const char* respondMessage);
+    int handleQueryRequestToInt(const char * queryMessage, const char * respondMessage);
 
 private:
     Stream &_serial;
-    uint8_t timeout = 200;
+    uint8_t _timeout = 200;
 };
