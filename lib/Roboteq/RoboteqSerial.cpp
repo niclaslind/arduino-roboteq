@@ -1,6 +1,5 @@
 #include "RoboteqSerial.hpp"
 
-
 RoboteqSerial::RoboteqSerial(Stream &stream)
     : _serial(stream)
 {
@@ -315,7 +314,7 @@ int16_t RoboteqSerial::readMagsensorStatus()
  */
 int16_t RoboteqSerial::readMagsensorTrackPosition(uint8_t channel)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, channel, RoboteqCommands::readMagsensorTrackPositionRespond);    
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, channel, RoboteqCommands::readMagsensorTrackPositionRespond);
 }
 
 /**
@@ -396,7 +395,7 @@ int8_t RoboteqSerial::readTemperature(uint8_t channel)
  */
 uint32_t RoboteqSerial::readTime(uint8_t dataElementInNewControllerModel)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery,  RoboteqCommands::readTimeRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery, RoboteqCommands::readTimeRespond);
 }
 
 /**
@@ -418,7 +417,7 @@ String RoboteqSerial::readControlUnitTypeAndControllerModel()
  * @return: 
  */
 uint32_t RoboteqSerial::readMcuID(uint8_t dataElement)
-{    
+{
     return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, dataElement, RoboteqCommands::readMcuIDRespond);
 }
 
@@ -450,11 +449,47 @@ int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
     return this->handleQueryRequestToInt(RoboteqCommands::readSlipFrequencyQuery, channel, RoboteqCommands::readSlipFrequencyRespond);
 }
 
+
+void RoboteqSerial::sendMotorCommand(const char *commandMessage)
+{
+    this->sendQuery(commandMessage);
+}
+
+void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel)
+{
+    String command = commandMessage;
+    command += channel;
+    command += "_";
+    this->sendQuery(command.c_str());
+}
+
+void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel, int32_t value)
+{
+
+}
+
 void RoboteqSerial::sendQuery(const char *message)
 {
     this->_serial.write(message, strlen(message));
     this->_serial.flush();
 }
+
+String RoboteqSerial::readQuery(const char *message)
+{
+    String inputString;
+    unsigned long startTime = millis();
+    while (millis() - startTime < _timeout && _serial.available())
+    {
+        inputString = _serial.readStringUntil('\r');
+
+        if (inputString.startsWith(message))
+        {
+            return inputString.substring(inputString.indexOf("=") + 1);
+        }
+    }
+    return "-1";
+}
+
 
 String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
 {
@@ -488,18 +523,3 @@ int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t ext
     return this->readQuery(respondMessage).toInt();
 }
 
-String RoboteqSerial::readQuery(const char *message)
-{
-    String inputString;
-    unsigned long startTime = millis();
-    while (millis() - startTime < _timeout && _serial.available())
-    {
-        inputString = _serial.readStringUntil('\r');
-
-        if (inputString.startsWith(message))
-        {
-            return inputString.substring(inputString.indexOf("=") + 1);
-        }
-    }
-    return "-1";
-}

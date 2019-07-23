@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Arduino.h>
+#include <stdint.h>
 #include <Stream.h>
 #include "RoboteqAPICommands.hpp"
 
@@ -67,15 +67,51 @@ public:
     int32_t readUserIntegerVariable(uint8_t variableNumber);
     int16_t readSlipFrequency(uint8_t channel);
 
+public:
+    void setAcceleration(uint8_t channel, int32_t value);
+    void nextAcceleration(uint8_t channel, int32_t value);
+    void setUserBooleanVariable(uint8_t varNbr, bool value);
+    void multiPurposeBind(uint8_t channel);
+    void setEncoderCounters(uint8_t channel, int32_t value);
+    void setBrushlessCounter(uint8_t channel, int32_t value);
+    void setMotorCommandViaCan(uint8_t channel, int32_t value);
+    void canSend(uint8_t element, uint8_t value);
+    void resetIndividualDigitalOutBits(uint8_t outputNbr);
+    void setIndividualOutBits(uint8_t outputNbr);
+    void setDeceleration(uint8_t channel, int32_t value);
+    void setAllDigitalOutBits(uint8_t value);
+    void nextDecceleration(uint8_t channel, int32_t value);
+    void saveConfigurationInEeprom();
+    void emergencyStop();
+    void goToSpeedOrRelativePosition(uint8_t channel, int32_t value);
+    void loadHomeCounter(uint8_t channel);
+    void emergencyStopRelease();
+    void stopInAllModes(uint8_t channel);
+    void goToAbsoluteDesiredPosition(uint8_t channel, int32_t value);
+    void goToRelativeDesiredPosition(uint8_t channel, int32_t value);
+    void nextGoToRelativeDesiredPosition(uint8_t channel, int32_t value);
+    void nextGoToAbsoluteDesiredPosition(uint8_t channel, int32_t value);
+    void microBasicRun(uint8_t mode);
+    void setPulseOut(uint8_t channel, int32_t value);
+    void setMotorSpeed(uint8_t channel, int32_t value);
+    void nextVelocity(uint8_t channel, int32_t value);
+    void setUserVarable(uint8_t varNbr, int32_t value);
+
+private:
+    void sendMotorCommand(const char *commandMessage);
+    void sendMotorCommand(const char *commandMessage, uint8_t channel);
+    void sendMotorCommand(const char *commandMessage, uint8_t channel, int32_t value);
+
+
 private:
     void sendQuery(const char *message);
-    
     String readQuery(const char *message);
-    String handleQueryRequest(const char * queryMessage, uint8_t extraParameter, const char* respondMessage);
-    String handleQueryRequest(const char * queryMessage, const char * respondMessage);
 
-    int handleQueryRequestToInt(const char * queryMessage, uint8_t extraParameter, const char* respondMessage);
-    int handleQueryRequestToInt(const char * queryMessage, const char * respondMessage);
+private:
+    String handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage);
+    String handleQueryRequest(const char *queryMessage, const char *respondMessage);
+    int handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage);
+    int handleQueryRequestToInt(const char *queryMessage, const char *respondMessage);
 
 private:
     Stream &_serial;
