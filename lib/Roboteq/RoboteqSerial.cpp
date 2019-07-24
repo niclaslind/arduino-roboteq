@@ -449,6 +449,126 @@ int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
     return this->handleQueryRequestToInt(RoboteqCommands::readSlipFrequencyQuery, channel, RoboteqCommands::readSlipFrequencyRespond);
 }
 
+void RoboteqSerial::setAcceleration(uint8_t channel, int32_t value)
+{
+    this->sendMotorCommand(RoboteqCommands::setAccelerationCommand, channel, value);
+}
+
+void RoboteqSerial::nextAcceleration(uint8_t channel, int32_t value)
+{
+    this->sendMotorCommand(RoboteqCommands::nextAccelerationCommand, channel, value);
+}
+
+void RoboteqSerial::setUserBooleanVariable(uint8_t varNbr, bool value)
+{
+    this->sendMotorCommand(RoboteqCommands::setUserBooleanVariableCommand, varNbr, value);
+}
+
+void RoboteqSerial::multiPurposeBind(uint8_t channel)
+{
+    this->sendMotorCommand(RoboteqCommands::multiPurposeBindCommand, channel);
+}
+
+void RoboteqSerial::setEncoderCounters(uint8_t channel, int32_t value)
+{
+    this->sendMotorCommand(RoboteqCommands::setEncoderCountersCommand, channel, value);
+}
+
+void RoboteqSerial::setBrushlessCounter(uint8_t channel, int32_t value)
+{
+    this->sendMotorCommand(RoboteqCommands::setBrushlessCounterCommand, channel, value);
+}
+
+void RoboteqSerial::setMotorCommandViaCan(uint8_t channel, int32_t value)
+{
+    this->sendMotorCommand(RoboteqCommands::setMotorCommandViaCanCommand, channel, value);
+}
+
+void RoboteqSerial::canSend(uint8_t element, uint8_t value)
+{
+    this->sendMotorCommand(RoboteqCommands::canSendCommand, element, value);
+}
+
+void RoboteqSerial::resetIndividualDigitalOutBits(uint8_t outputNbr)
+{
+    this->sendMotorCommand(RoboteqCommands::resetIndividualDigitalOutBitsCommand, outputNbr);
+}
+
+void RoboteqSerial::setIndividualOutBits(uint8_t outputNbr)
+{
+}
+
+void RoboteqSerial::setDeceleration(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::setAllDigitalOutBits(uint8_t value)
+{
+}
+
+void RoboteqSerial::nextDecceleration(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::saveConfigurationInEeprom()
+{
+}
+
+void RoboteqSerial::emergencyStop()
+{
+}
+
+void RoboteqSerial::goToSpeedOrRelativePosition(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::loadHomeCounter(uint8_t channel)
+{
+}
+
+void RoboteqSerial::emergencyStopRelease()
+{
+}
+
+void RoboteqSerial::stopInAllModes(uint8_t channel)
+{
+}
+
+void RoboteqSerial::goToAbsoluteDesiredPosition(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::goToRelativeDesiredPosition(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::nextGoToRelativeDesiredPosition(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::nextGoToAbsoluteDesiredPosition(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::microBasicRun(uint8_t mode)
+{
+}
+
+void RoboteqSerial::setPulseOut(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::setMotorSpeed(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::nextVelocity(uint8_t channel, int32_t value)
+{
+}
+
+void RoboteqSerial::setUserVarable(uint8_t varNbr, int32_t value)
+{
+}
 
 void RoboteqSerial::sendMotorCommand(const char *commandMessage)
 {
@@ -465,7 +585,6 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel
 
 void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel, int32_t value)
 {
-
 }
 
 void RoboteqSerial::sendQuery(const char *message)
@@ -489,7 +608,6 @@ String RoboteqSerial::readQuery(const char *message)
     }
     return "-1";
 }
-
 
 String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
 {
@@ -522,4 +640,3 @@ int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t ext
     this->sendQuery(query.c_str());
     return this->readQuery(respondMessage).toInt();
 }
-
