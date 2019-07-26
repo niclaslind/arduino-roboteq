@@ -30,7 +30,7 @@ int16_t RoboteqSerial::readMotorAmps()
  *      Some power board units measure the Mo-tor Amps and calculate the Battery Amps, while other models measure the Battery Amps and calculate the Motor Amps. 
  *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
- * @params: uint8_t channel: Motor Channel
+ * @params: uint8_t channel: motor channel you want the 
  * 
  * @return: current motor amp of channel
  */
@@ -70,9 +70,9 @@ uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-uint16_t RoboteqSerial::readRawSinCosSensor(uint8_t channel)
+uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensorValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, channel, RoboteqCommands::readRotorAngleRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, value, RoboteqCommands::readRotorAngleRespond);
 }
 
 /**
@@ -423,9 +423,9 @@ uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(uint8_t channel)
+int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqCommands::ReadFieldOrientedControlMotorAmpsValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, channel, RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, value, RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
 }
 
 /**

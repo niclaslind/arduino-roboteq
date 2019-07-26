@@ -14,7 +14,7 @@ public:
     int16_t readMotorAmps(uint8_t channel);
     int16_t readAnalogInput(uint8_t channel);
     uint16_t readRotorAngle(uint8_t channel);
-    uint16_t readRawSinCosSensor(uint8_t channel);
+    uint16_t readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensorValue &value);
     bool readUserBooleanValue(uint8_t booleanVariable);
     int16_t readBatteryAmps(uint8_t channel);
     int32_t readBrushlessCountRelative(uint8_t channel);
@@ -45,7 +45,7 @@ public:
     uint16_t readSpektrumReceiver(uint8_t radioChannel);
     uint8_t readLockStatus();
     uint8_t readMotorCommandApplied(uint8_t channel);
-    int16_t readFieldOrientedControlMotorAmps(uint8_t channel);
+    int16_t readFieldOrientedControlMotorAmps( RoboteqCommands::ReadFieldOrientedControlMotorAmpsValue &value);
     uint8_t readMagsensorTrackDetect(uint8_t channel);
     uint8_t readMagsensorMarkers(uint8_t channel);
     int16_t readMagsensorStatus();

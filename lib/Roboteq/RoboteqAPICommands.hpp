@@ -4,6 +4,72 @@
 
 namespace RoboteqCommands
 {
+
+ enum ReadRawSinCosSensorValue : uint8_t {
+    SinInput1_SsiInput1 = 1,
+    CosInput1,
+    SinInput2_SsiInput2,
+    CosInput2
+};
+
+ enum ReadFieldOrientedControlMotorAmpsValue : uint8_t {
+    FluxAmps1 = 1,
+    TorqueAmps1,
+    FluxAmps2,
+    TorqueAmps2
+};
+
+/**
+ * @note: If only one sensor is enabled, only use variables for input1
+ */
+ enum ReadMagsensorMarkersValue : uint8_t {
+    LeftMarkerOfSensorAtPulseInput1 = 1,
+    RightMarkerOfSensorAtPulseInput1,
+    LeftMarkerOfSensorAtPulseInput2,
+    RightMarkerOfSensorAtPulseInput2
+};
+
+/**
+ * @note: If only one sensor is enabled, only use variables for input1
+ */
+enum ReadMagsensorTrackPositionValue : uint8_t {
+    LeftTrackOfSensorAtPulseInput1 = 1,
+    RightTrackOfSensorAtPulseInput1,
+    ActiveTrackOfSensorAtPulseInput1,
+    LeftTrackOfSensorAtPulseInput2,
+    RightTrackOfSensorAtPulseInput2,
+    ActiveTrackOfSensorAtPulseInput2
+};
+
+enum ReadTemperatureValue : uint8_t {
+    McuTemperature = 1,
+    Channel1Side,
+    Channel2Side,
+};
+
+enum ReadTimeValue : uint8_t {
+    Seconds = 1,
+    Minutes,
+    Hours,
+    DayOfMonth,
+    Month,
+    YearInFull
+};
+
+ enum ReadMcuIdValue : uint8_t {
+    McuType = 1,
+    McuDeviceId,
+    McuUniqueId1,
+    McuUniqueId2,
+    McuUniqueId3,
+};
+
+ enum ReadVoltsValue : uint8_t {
+    InternalVolts = 1,
+    BatteryVolts,
+    FiveVoltsOutput, 
+};
+
 const char *const readMotorAmpsQuery = "?A";
 const char *const readMotorAmpsRespond = "A=";
 const char *const readAnalogInputQuery = "?AIC_";
@@ -110,7 +176,7 @@ const char *const readSlipFrequencyQuery = "?SL_";
 const char *const readSlipFrequencyRespond = "SL=";
 const char *const setAccelerationCommand = "!AC";
 const char *const nextAccelerationCommand = "!AX";
-const char *const setUserBooleanVariableCommand ="!B";
+const char *const setUserBooleanVariableCommand = "!B";
 const char *const multiPurposeBindCommand = "!BND";
 const char *const setEncoderCountersCommand = "!C";
 const char *const setBrushlessCounterCommand = "!CB";
@@ -125,7 +191,7 @@ const char *const saveConfigurationInEeporomCommand = "!EES";
 const char *const emergencyStopCommand = "!EX";
 const char *const goToSpeedOrToRelativePositionCommand = "!G";
 const char *const loadHomeCounterCommand = "!H";
-const char *const emergencyStopReleaseCommand  = "!MG";
+const char *const emergencyStopReleaseCommand = "!MG";
 const char *const stopInAllModesCommand = "!MS";
 const char *const goToAbsoluteDesiredPositionCommand = "!P";
 const char *const goToRelativeDesiredPositionCommand = "!PR";
