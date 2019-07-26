@@ -10,8 +10,7 @@ public:
     explicit RoboteqSerial(Stream &stream);
 
 public:
-    int16_t readFaultFlags();
-    int16_t readVoltage();
+    int16_t readMotorAmps();
     int16_t readMotorAmps(uint8_t channel);
     int16_t readAnalogInput(uint8_t channel);
     uint16_t readRotorAngle(uint8_t channel);
@@ -37,6 +36,7 @@ public:
     int16_t readFeedback(uint8_t channel);
     int16_t readFocAngleAdjust(uint8_t channel);
     String readFirmwareID();
+    int16_t readFaultFlags();
     int16_t readRuntimeStatusFlag(uint8_t channel);
     int16_t raedRuntimeStatusFlag(uint8_t channel);
     uint8_t readStatusFlag();
@@ -99,9 +99,8 @@ public:
 
 private:
     void sendMotorCommand(const char *commandMessage);
-    void sendMotorCommand(const char *commandMessage, uint8_t channel);
-    void sendMotorCommand(const char *commandMessage, uint8_t channel, int32_t value);
-
+    void sendMotorCommand(const char *commandMessage, uint8_t argument);
+    void sendMotorCommand(const char *commandMessage, uint8_t argument, int32_t value);
 
 private:
     void sendQuery(const char *message);

@@ -6,30 +6,32 @@ RoboteqSerial::RoboteqSerial(Stream &stream)
 }
 
 /**
- * @description:
+ * @description: Measures and reports the motor Amps, in Amps*10, for all operating channels. 
+ *              For brush-less controllers this query reports the RMS value. 
+ *              Note that the current flowing through the motors is often higher than this flowing through the battery
  * 
- * @return: fault flags as a byte, each bit is a faultflag
- */
-int16_t RoboteqSerial::readFaultFlags()
-{
-    return this->handleQueryRequestToInt(RoboteqCommands::readFaulFlagQuery, RoboteqCommands::readFaultFlagRespond);
-}
-
-/**
- * @description:
+ * @note: Single channel controllers will report a single value. 
+ *      Some power board units measure the Mo-tor Amps and calculate the Battery Amps, while other models measure the Battery Amps and calculate the Motor Amps. 
+ *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
- * @return: voltage of all voltage in Roboteq
+ * @return: current motor amp of channel
  */
-int16_t RoboteqSerial::readVoltage()
+int16_t RoboteqSerial::readMotorAmps()
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorAmpsQuery, RoboteqCommands::readMotorAmpsRespond);
 }
 
 /**
  * @description: Measures and reports the motor Amps, in Amps*10, for all operating channels. 
- *              For brush-less controllers this query reports the RMS value. Note that the current flowing through the motors is often higher than this flowing through the battery
+ *              For brush-less controllers this query reports the RMS value. 
+ *              Note that the current flowing through the motors is often higher than this flowing through the battery
+ * 
+ * @note: Single channel controllers will report a single value. 
+ *      Some power board units measure the Mo-tor Amps and calculate the Battery Amps, while other models measure the Battery Amps and calculate the Motor Amps. 
+ *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
  * @params: uint8_t channel: Motor Channel
+ * 
  * @return: current motor amp of channel
  */
 int16_t RoboteqSerial::readMotorAmps(uint8_t channel)
@@ -306,6 +308,16 @@ int16_t RoboteqSerial::readFeedback(uint8_t channel)
 int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readFocAngleAdjustQuery, channel, RoboteqCommands::readFocAngleAdjustRespond);
+}
+
+/**
+ * @description:
+ * 
+ * @return: fault flags as a byte, each bit is a faultflag
+ */
+int16_t RoboteqSerial::readFaultFlags()
+{
+    return this->handleQueryRequestToInt(RoboteqCommands::readFaulFlagQuery, RoboteqCommands::readFaultFlagRespond);
 }
 
 /**
@@ -1025,10 +1037,10 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel)
+void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argument)
 {
     String command = commandMessage;
-    command += channel;
+    command += argument;
     command += "_";
     this->sendQuery(command.c_str());
 }
@@ -1039,8 +1051,13 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t channel, int32_t value)
+void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argument, int32_t value)
 {
+    String command = commandMessage;
+    command += argument;
+    command += value;
+    command += "_";
+    this->sendQuery(command.c_str());
 }
 
 /**
