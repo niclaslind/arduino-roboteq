@@ -449,9 +449,9 @@ uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-uint8_t RoboteqSerial::readMagsensorMarkers(uint8_t channel)
+uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqCommands::ReadMagsensorMarkersValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, channel, RoboteqCommands::readMagsensorMarkersRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, value, RoboteqCommands::readMagsensorMarkersRespond);
 }
 
 /**
@@ -473,9 +473,9 @@ int16_t RoboteqSerial::readMagsensorStatus()
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-int16_t RoboteqSerial::readMagsensorTrackPosition(uint8_t channel)
+int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqCommands::ReadMagsensorTrackPositionValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, channel, RoboteqCommands::readMagsensorTrackPositionRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, value, RoboteqCommands::readMagsensorTrackPositionRespond);
 }
 
 /**
@@ -576,9 +576,9 @@ int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-int8_t RoboteqSerial::readTemperature(uint8_t channel)
+int8_t RoboteqSerial::readTemperature(RoboteqCommands::ReadTemperatureValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, channel, RoboteqCommands::readTemperatureRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, value, RoboteqCommands::readTemperatureRespond);
 }
 
 /**
@@ -589,7 +589,8 @@ int8_t RoboteqSerial::readTemperature(uint8_t channel)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-uint32_t RoboteqSerial::readTime(uint8_t dataElementInNewControllerModel)
+// TODO: check this fuction
+uint32_t RoboteqSerial::readTime(RoboteqCommands::ReadTimeValue &value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery, RoboteqCommands::readTimeRespond);
 }
@@ -622,9 +623,9 @@ String RoboteqSerial::readControlUnitTypeAndControllerModel()
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-uint32_t RoboteqSerial::readMcuID(uint8_t dataElement)
+uint32_t RoboteqSerial::readMcuID(RoboteqCommands::ReadMcuIdValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, dataElement, RoboteqCommands::readMcuIDRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, value, RoboteqCommands::readMcuIDRespond);
 }
 
 /**
@@ -637,9 +638,9 @@ uint32_t RoboteqSerial::readMcuID(uint8_t dataElement)
  * @params: uint8_t channel: MotorChannel
  * @return: 
  */
-uint16_t RoboteqSerial::readVolts(uint8_t dataElement)
+uint16_t RoboteqSerial::readVolts(RoboteqCommands::ReadVoltsValue &value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, dataElement, RoboteqCommands::readVoltsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, value, RoboteqCommands::readVoltsRespond);
 }
 
 /**
