@@ -14,6 +14,14 @@
    limitations under the License.
 */
 
+#if ARDUINO >= 100
+#include "Arduino.h"
+#else
+extern "C" {
+#include "WConstants.h"
+}
+#endif
+
 #include "RoboteqSerial.hpp"
 
 RoboteqSerial::RoboteqSerial(Stream &stream)
@@ -30,7 +38,7 @@ RoboteqSerial::RoboteqSerial(Stream &stream)
  *      Some power board units measure the Mo-tor Amps and calculate the Battery Amps, while other models measure the Battery Amps and calculate the Motor Amps. 
  *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
- * @return: current motor amp of channel
+ * @return: Amps *10 for each channel
  */
 int16_t RoboteqSerial::readMotorAmps()
 {
@@ -46,9 +54,9 @@ int16_t RoboteqSerial::readMotorAmps()
  *      Some power board units measure the Mo-tor Amps and calculate the Battery Amps, while other models measure the Battery Amps and calculate the Motor Amps. 
  *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
- * @params: uint8_t channel: motor channel you want the 
+ * @params: uint8_t channel: Motor channel
  * 
- * @return: current motor amp of channel
+ * @return: Amps *10 for current channel
  */
 int16_t RoboteqSerial::readMotorAmps(uint8_t channel)
 {
@@ -59,10 +67,10 @@ int16_t RoboteqSerial::readMotorAmps(uint8_t channel)
  * @description: Returns value of an Analog input after all the adjustments are performed to convert it to a command or feedback value (Min/Max/Center/Deadband/Linearity). 
  *              If an input is disabled, the query returns 0. The total number of Analog input channels varies from one controller model to another and can be found in the product datasheet.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Converted analog input value +/-1000 range
  */
-int16_t RoboteqSerial::readAnalogInput(uint8_t channel)
+int16_t RoboteqSerial::readAnalogInputAfterConversion(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readAnalogInputQuery, channel, RoboteqCommands::readAnalogInputRespond);
 }
@@ -71,8 +79,8 @@ int16_t RoboteqSerial::readAnalogInput(uint8_t channel)
  * @description: On brushless controller operating in sinusoidal mode, this query returns the real time val-ue of the rotor’s electrical angle of brushless motor. 
  *                 This query is useful for verifying trou-bleshooting sin/cos and SPI/SSI sensors. Angle are reported in 0-511 degrees
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Rotor electrical angle
  */
 uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
 {
@@ -83,8 +91,8 @@ uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
  * @description: Returns real time raw values of ADC connected to sin/cos sensors of each motor or the real time values of the raw data reported by the SSI sensor of the motor. 
  *              This query is useful for verifying troubleshooting sin/cos sensors and SSI sensors.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: ReadRawSinCosSensorValue value: Which input you want to read
+ * @return: ADC value
  */
 uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensorValue &value)
 {
@@ -96,8 +104,8 @@ uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensor
  *              It is used to pass boolean states between user scripts and a microcomputer connected to the controller. 
  *              The total number of user boolean variables varies from one controller model to another and can be found in the product datasheet
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t booleanVariable: Boolean variable number
+ * @return: 0 or 1 state of the variable
  */
 bool RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable)
 {
@@ -108,8 +116,8 @@ bool RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable)
  * @description: Measures and reports the Amps flowing from the battery in Amps * 10.
  *               Battery Amps are often lower than motor Amps
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Amps *10 for each channel
  */
 int16_t RoboteqSerial::readBatteryAmps(uint8_t channel)
 {
@@ -120,8 +128,8 @@ int16_t RoboteqSerial::readBatteryAmps(uint8_t channel)
  * @description: Returns the amount of Internal sensor (Hall, SinCos, Resolver) counts that have been measured from the last time this query was made. 
  *              Relative counter read is sometimes easier to work with, compared to full counter reading, as smaller numbers are usually returned.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Value
  */
 int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
 {
@@ -132,8 +140,8 @@ int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
  * @description: On brushless motor controllers, reports the actual speed measured using the motor’s In-ternal sensors (Hall, SinCos, Resolver) as the actual RPM value. 
  *              To report RPM accurately, the correct number of motor poles must be loaded in the BLPOL configuration parameter
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Speed in RPM
  */
 int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
 {
@@ -141,10 +149,11 @@ int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
 }
 
 /**
- * @description: Returns the encoder value as an absolute number. The counter is 32-bit with a range of +/- 2147483648 counts
+ * @description: Returns the encoder value as an absolute number. 
+ *              The counter is 32-bit with a range of +/- 2147483648 counts.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Absolute counter value
  */
 int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel)
 {
@@ -155,8 +164,8 @@ int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel)
  * @description: On brushless motor controllers, returns the running total of Internal sensor (Hall, SinCos, Resolver) transition value as an absolute number. 
  *              The counter is 32-bit with a range of +/- 2147483648 counts.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Absolute counter value
  */
 int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel)
 {
@@ -168,8 +177,8 @@ int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel)
  *              Data will be available for reading with this query only after a ?CF query is first used to check how many received frames are pending in the FIFO buffer. 
  *              When the query is sent without arguments, the controller replies by outputting all elements of the frame separated by colons
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Number of frames in receive queue
  */
 uint8_t RoboteqSerial::readRawCanReceivedFramesCount()
 {
@@ -182,8 +191,8 @@ uint8_t RoboteqSerial::readRawCanReceivedFramesCount()
  *              MicroBasic  script  or  from  an  external  microcomputer,  even though  the  controller  may  be  currently  responding  to  Serial or Pulse  command  because  of  a higher priority setting. 
  *              The returned value is the raw Analog input value with all the adjustments performed to convert it to a command (Min/Max/Center/Deadband/Linearity).
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Command value in +/-1000 range
  */
 int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel)
 {
@@ -196,8 +205,8 @@ int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel)
  *              even though the controller may be currently responding to Serial or Analog command because of a higher priority setting. 
  *              The returned value is the raw Pulse input value with all the adjust-ments performed to convert it to a command (Min/Max/Center/Deadband/Linearity)
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Command value in +/-1000 range 
  */
 int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel)
 {
@@ -209,8 +218,8 @@ int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel)
  *              This  query  can  be  used,  for example,  to  read  from  an  external  microcomputer  the  command  generated  inside  MicroBasic script, 
  *              even though the controller may be currently respond-ing to a Pulse or Analog command because of a higher priority setting.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Command value in +/-1000 range 
  */
 int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel)
 {
@@ -222,20 +231,20 @@ int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel)
  *              Within each 32-bit word are 8 groups of 4-bits. 
  *              The 4-bits contain the node information. E.g. bits 0-3 of first number is for node 0, bits 8-11 of first number is for node 2, bits 4-7 of second number is for node 5 and bits 12-15 of fourth number is for node 11, etc.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t nodes: 1= Nodes 0-3 ... 16= Nodes 124-127
+ * @return: 4 words of 4 bits.
  */
-uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t channel)
+uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t nodes)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRoboCanAliveNodesMapQuery, channel, RoboteqCommands::readRoboCanAliveNodesMapRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRoboCanAliveNodesMapQuery, nodes, RoboteqCommands::readRoboCanAliveNodesMapRespond);
 }
 
 /**
  * @description: Returns the amount of counts that have been measured from the last time this query was made. 
  *              Relative counter read is sometimes easier to work with, compared to full counter reading, as smaller numbers are usually returned.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Counts since last read using ?CR
  */
 int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel)
 {
@@ -246,8 +255,8 @@ int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel)
  * @description: Reports the status of each of the available digital inputs. The query response is a single digital number which must be converted to binary and gives the status of each of the in-puts. 
  *              The total number of Digital input channels varies from one controller model to anoth-er and can be found in the product datasheet
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: b1 + b2*2 + b3*4 + ... +bn*2^n-1
  */
 uint32_t RoboteqSerial::readDigitalInputs()
 {
@@ -258,8 +267,8 @@ uint32_t RoboteqSerial::readDigitalInputs()
  * @description: Reports the status of an individual Digital Input. The query response is a boolean value (0 or 1). 
  *              The total number of Digital input channels varies from one controller model to anoth-er and can be found in the product datasheet.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: 0 or 1 state for each input
  */
 uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber)
 {
@@ -270,8 +279,8 @@ uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber)
  * @description: Reads the actual state of all digital outputs. The response to that query is a single number which must be converted into binary in order to read the status of the individual output bits.
  *               When querying an individual output, the reply is 0 or 1 depending on its status. The total number of Digital output channels varies from one controller model to another and can be found in the product datasheet.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: d1 + d2*2 + d3*4 + ... + dn * 2^n-1
  */
 uint16_t RoboteqSerial::readDigitalOutputStatus()
 {
@@ -282,8 +291,8 @@ uint16_t RoboteqSerial::readDigitalOutputStatus()
  * @description: This query is used when chaining commands in Position Count mode, to detect that a destination has been reached and that the next destination values that were loaded in the buffer have become active. 
  *              The Destination Reached bit is latched and is cleared once it has been read.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: 0: Not yet reached, 1: Reached
  */
 uint8_t RoboteqSerial::readDestinationReached(uint8_t channel)
 {
@@ -294,8 +303,8 @@ uint8_t RoboteqSerial::readDestinationReached(uint8_t channel)
  * @description: In closed-loop modes, returns the difference between the desired speed or position and the measured feedback. 
  *              This query can be used to detect when the motor has reached the desired speed or position. In open loop mode, this query returns 0
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Error value
  */
 int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
 {
@@ -307,8 +316,8 @@ int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
  *              The feedback source can be Encoder, Analog or Pulse. Selecting the feedback source is done using the encoder, pulse or analog configuration parameters.
  *               This query is useful for verifying that the correct feedback source is used by the channel in the closed-loop mode and that its value is in range with expectations
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Feedback values
  */
 int16_t RoboteqSerial::readFeedback(uint8_t channel)
 {
@@ -318,18 +327,29 @@ int16_t RoboteqSerial::readFeedback(uint8_t channel)
 /**
  * @description: Read in real time the angle correction that is currently applied by the Field Oriented algo-rithm in order achieve optimal performance
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Angle correction
  */
 int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readFocAngleAdjustQuery, channel, RoboteqCommands::readFocAngleAdjustRespond);
 }
 
+
+// TODO: Make an overload of this function and make the user choose which fault flag we should look for
 /**
- * @description:
+ * @description: Reports the status of the controller fault conditions that can occur during operation.
+ *              The response to that query is a single number which must be converted into binary in order to evaluate each of the individual status bits that compose it.
  * 
- * @return: fault flags as a byte, each bit is a faultflag
+ * @return: f1 + f2*2 + f3*4 + ... + fn*2^n-1
+ *          f1= Overheat 
+ *          f2= Overvoltage 
+ *          f3= Undervoltage 
+ *          f4= Short circuit 
+ *          f5= Emergency stop 
+ *          f6= Motor/Sensor Setup fault 
+ *          f7= MOSFET failure 
+ *          f8= Default configuration loaded at startup
  */
 int16_t RoboteqSerial::readFaultFlags()
 {
@@ -339,44 +359,64 @@ int16_t RoboteqSerial::readFaultFlags()
 /**
  * @description: This query will report a string with the date and identification of the firmware revision of the controller.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @return: Firmware ID string
  */
 String RoboteqSerial::readFirmwareID()
 {
     return this->handleQueryRequest(RoboteqCommands::readFirmwareIDQuery, RoboteqCommands::readFirmwareIDRespond);
 }
 
+// TODO: Make an overload of this function and make the user choose which fault flag we should look for
 /**
  * @description: Report the runtime status of each motor. The response to that query is a single number which must be converted into binary in order to evaluate each of the individual status bits that compose it.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return:  f1 + f2*2 + f3*4 + ... + fn*2^n-1
+ *      f1 = Amps Limit currently active
+ *      f2 = Motor stalled
+ *      f3 = Loop Error detected
+ *      f4 = Safety Stop active
+ *      f5 = Forward Limit triggered
+ *      f6 = Reverse Limit triggered
+ *      f7 = Amps Trigger activated
  */
 int16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readRuntimeStatusFlagQuery, channel, RoboteqCommands::readRuntimeStatusFlagRespond);
 }
 
+// TODO: Make an overload of this function and make the user choose which fault flag we should look for
 /**
  *  @description: Report the state of status flags used by the controller to indicate a number of internal conditions during normal operation. 
  *              The response to this query is the single number for all status flags. The status of individual flags is read by converting this number to binary and look at various bits of that number
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @return:  f1 + f2*2 + f3*4 + ... + fn*2^n-1
+ *          f1 = Serial mode
+ *          f2 = Pulse mode 
+ *          f3 = Analog mode 
+ *          f4 = Power stage off 
+ *          f5 = Stall detected 
+ *          f6 = At limit 
+ *          f7 = Unused 
+ *          f8 = MicroBasic script running
+ *          f9 = Motor/Sensor Tuning mode
  */
 uint8_t RoboteqSerial::readStatusFlag()
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readStatusFlagQuery, RoboteqCommands::readStatusFlagRespond);
 }
 
+// TODO: Make an overload of this function and make the user choose which fault flag we should look for
 /**
  *  @description: Reports that status of the hall sensor inputs. This function is mostly useful for trouble-shooting. When no sensors are connected, all inputs are pulled high and the value 7 will be replied.
  *              For 60 degrees spaced Hall sensors, 0-1- 3-4- 6-7 are valid combinations, while 2 and 5 are invalid combinations. 
  *              For 120 degrees spaced sensors, 1-2- 3-4- 5-6 are valid combinations, while 0 and 7 are invalid combinations. In normal conditions, valid values should appear at one time or the other as the motor shaft is rotated
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: HS= ha + 2*hb + 4*hc
+ *         ha = hall sensor A
+ *         hb = hall sensor B
+ *         hc = hall sensor C
  */
 uint8_t RoboteqSerial::readHallSensorStates(uint8_t channel)
 {
@@ -386,8 +426,10 @@ uint8_t RoboteqSerial::readHallSensorStates(uint8_t channel)
 /**
  * @description: This query is used to determine if specific RoboCAN node is alive on CAN bus.
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t nodeID: Node ID
  * @return: 
+ *          0 : Not present
+ *          1 : Alive
  */
 uint8_t RoboteqSerial::isRoboCanNodeAlive(uint8_t nodeID)
 {
@@ -397,8 +439,8 @@ uint8_t RoboteqSerial::isRoboCanNodeAlive(uint8_t nodeID)
 /**
  * @description: On controller models with Spektrum radio support, this query is used to read the raw values of each of up to 6 receive channels. When signal is received, this query returns the value 0.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Raw joystick value, or 0 if transmitter is off or out of range
  */
 uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
 {
@@ -409,8 +451,10 @@ uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
  * @description:Returns the status of the lock flag. If the configuration is locked, then it will not be possi-ble to read any configuration parameters until the lock is removed or until the parameters are reset to factory default.
  *             This feature is useful to protect the controller configuration from being copied by unauthorized people.
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
+ *      0: unlocked 
+ *      1: locked
  */
 uint8_t RoboteqSerial::readLockStatus()
 {
@@ -424,8 +468,8 @@ uint8_t RoboteqSerial::readLockStatus()
  *              In the Analog and Pulse modes, this query will report the Analog or Pulse input after it is being convert-ed using the min, max, center, deadband, and linearity corrections.  
  *              This query is useful for viewing which command is actually being used and the effect of the correction that is being applied to the raw input.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Command value used for each motor. 0 to +/-1000 range
  */
 uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
 {
@@ -436,8 +480,8 @@ uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
  * @description: On brushless motor controllers operating in sinusoidal mode, this query returns the Torque (also known as Quadrature or Iq) current, and the Flux (also known as Direct, or Id) current. 
  *              Current is reported in Amps x 10.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t ReadFieldOrientedControlMotorAmpsValue: value
+ * @return: Amps * 10
  */
 int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqCommands::ReadFieldOrientedControlMotorAmpsValue &value)
 {
@@ -449,8 +493,10 @@ int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqCommands::ReadFi
  *              If no tape is detected, the output will be 0. If only one sensor is connected to any pulse in-put, no argument is needed for this query. 
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
+ *         0: No track detected
+ *         1: Track detected
  */
 uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
 {
@@ -462,8 +508,8 @@ uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
  *              If only one sen-sor is connected to any pulse input this query will report the data of that sensor, regard-less which pulse input it is connected to. 
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: 0: No marker detected, 1: Marker detected
  */
 uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqCommands::ReadMagsensorMarkersValue &value)
 {
@@ -475,8 +521,13 @@ uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqCommands::ReadMagsensorMarker
  *              If only one sensor is connected to any pulse in-put, no argument is needed for this query. 
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: 1 + f2*2 + f3*4 + ... + fn*2n-1
+ *          f1: Tape cross
+ *          f2: Tape detect
+ *          f3: Left marker present
+ *          f4: Right marker present
+ *          f9: Sensor active
  */
 int16_t RoboteqSerial::readMagsensorStatus()
 {
@@ -486,8 +537,8 @@ int16_t RoboteqSerial::readMagsensorStatus()
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Position in millimeters
  */
 int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqCommands::ReadMagsensorTrackPositionValue &value)
 {
@@ -500,8 +551,8 @@ int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqCommands::ReadMagsensor
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor. 
  *              The reported position of the magnetic track in millimeters, us-ing the center of the sensor as the 0 reference
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Gyroscope value
  */
 int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel)
 {
@@ -513,8 +564,8 @@ int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel)
  *              This value takes into account all the internal corrections and any limiting resulting from temperature or over current. 
  *              A value of 1000 equals 100% PWM. The equivalent voltage at the motor wire is the battery voltage * PWM level.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: 0 to +/-1000 power level
  */
 int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel)
 {
@@ -526,8 +577,8 @@ int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel)
  *              In Frequency mode, the returned value is in Hertz. In Duty Cycle mode, the reported value ranges between 0 and 4095 when the pulse duty cycle is 0% and 100% respectively. 
  *              In Pulse Count mode, the reported value in the number of pulses as detected. This counter only increments. In order to reset that counter the pulse capture mode needs to be set back to disabled and then again to Pulse Count.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Pulse capture input number
+ * @return: Value of pulse input
  */
 uint16_t RoboteqSerial::readPulseInput(uint8_t channel)
 {
@@ -538,8 +589,8 @@ uint16_t RoboteqSerial::readPulseInput(uint8_t channel)
  * @description: Returns value of a Pulse input after all the adjustments were performed to convert it to a command or feedback value (Min/Max/Center/Deadband/Linearity). 
  *              If an input is disabled, the query returns 0.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Pulse input number
+ * @return: Converted input value to +/-1000 range
  */
 int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel)
 {
@@ -549,8 +600,8 @@ int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel)
 /**
  * @description: Reports the actual speed measured by the encoders as the actual RPM value. To report RPM accurately, the correct Pulses per Revolution (PPR) must be stored in the encoder configuration
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Speed in RPM
  */
 int16_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
 {
@@ -561,8 +612,7 @@ int16_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
  * @description: Scans the script storage memory and computes a checksum number that is unique to each script. If not script is loaded the query outputs the value 0xFFFFFFFF. 
  *              Since a stored script cannot be read out, this query is useful for determining if the correct version of a given script is loaded.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @return: Checksum number
  */
 uint32_t RoboteqSerial::readScriptChecksum()
 {
@@ -575,8 +625,8 @@ uint32_t RoboteqSerial::readScriptChecksum()
  *              then the returned value to this query will be 500, which is 50% of the 3000 max. 
  *              Note that if the motor spins faster than the Max RPM, the returned value will exceed 1000. However, a larger value is ignored by the controller for its internal operation.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Speed relative to max
  */
 int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
 {
@@ -589,8 +639,8 @@ int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
  * @note: On some controller models, additional temperature values may reported. These are mea-sured at different points and not documented. You may safely ignore this extra data. 
  *      Other controller models only have one heatsink temperature sensor and therefore only report one value in addition to the Internal IC temperature.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: ReadTemperatureValue value: Temp element you want to read
+ * @return: Temperature in degrees
  */
 int8_t RoboteqSerial::readTemperature(RoboteqCommands::ReadTemperatureValue &value)
 {
@@ -602,8 +652,8 @@ int8_t RoboteqSerial::readTemperature(RoboteqCommands::ReadTemperatureValue &val
  *              On older controller models, time is count-ed in a 32-bit counter that keeps track the total number of seconds, and that can be converted into a full day and time value using external calculation. 
  *              On newer models, the time is kept in multiple registers for seconds, minutes, hours (24h format), dayofmonth, month, year in full
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: ReadTimeValue value: Date element in new controller model
+ * @return: Value
  */
 // TODO: check this fuction
 uint32_t RoboteqSerial::readTime(RoboteqCommands::ReadTimeValue &value)
@@ -614,8 +664,8 @@ uint32_t RoboteqSerial::readTime(RoboteqCommands::ReadTimeValue &value)
 /**
  * @description: Reads the real-time value of the expected motor position in the position tracking closed loop mode and in speed position
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Position
  */
 int32_t RoboteqSerial::readPositionRelativeTracking(uint8_t channel)
 {
@@ -625,8 +675,8 @@ int32_t RoboteqSerial::readPositionRelativeTracking(uint8_t channel)
 /**
  * @description: Reports two strings identifying the Control Unit type and the Controller Model type. This query is useful for adapting the user software application to the controller model that is attached to the computer.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Control Unit Id String:Controller Model Id String
  */
 String RoboteqSerial::readControlUnitTypeAndControllerModel()
 {
@@ -636,8 +686,8 @@ String RoboteqSerial::readControlUnitTypeAndControllerModel()
 /**
  * @description: Reports MCU specific information. This query is useful for determining the type of MCU: 100 = STM32F10X, 300 = STM32F30X. The query also produces a unique Id number that is stored on the MCU silicon.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: ReadMcuIdValue &value: Data element you want to read
+ * @return: Value 
  */
 uint32_t RoboteqSerial::readMcuID(RoboteqCommands::ReadMcuIdValue &value)
 {
@@ -651,8 +701,8 @@ uint32_t RoboteqSerial::readMcuID(RoboteqCommands::ReadMcuIdValue &value)
  *              The 5V output will typically show the controller’s internal regulated 5V minus the drop of a diode that is used for protection and will be in the 4.7V range. 
  *              The battery voltage is monitored for detecting the undervoltage or overvoltage con-ditions.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Volts * 10 for internal and battery volts. Milivolts for 5V output
  */
 uint16_t RoboteqSerial::readVolts(RoboteqCommands::ReadVoltsValue &value)
 {
@@ -666,8 +716,7 @@ uint16_t RoboteqSerial::readVolts(RoboteqCommands::ReadVoltsValue &value)
  *              The 5V output will typically show the controller’s internal regulated 5V minus the drop of a diode that is used for protection and will be in the 4.7V range. 
  *              The battery voltage is monitored for detecting the undervoltage or overvoltage con-ditions.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @return: Volts * 10 for internal and battery volts. Milivolts for 5V output
  */
 uint16_t RoboteqSerial::readVolts()
 {
@@ -679,8 +728,8 @@ uint16_t RoboteqSerial::readVolts()
  *              It is used to pass 32-bit signed number between user scripts and a microcomputer connected to the controller. 
  *              The total number of user integer variables varies from one controller model to another and can be found in the product datasheet
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t variableNumber: Variable number
+ * @return: Value
  */
 int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber)
 {
@@ -691,8 +740,8 @@ int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber)
  * @description: This query is only used in AC Induction boards. 
  *              Read the value of the Slip Frequency be-tween the rotor and the stator of an AC Induction motor.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
+ * @return: Slip Frequency in Hertz * 10
  */
 int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
 {
@@ -707,7 +756,7 @@ int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
  *              Assuming that the Max RPM pa-rameter is set to 1000, and acceleration value of 10000 means that the motor will go from 0 to full speed in exactly 1 second, regardless of the actual motor speed. 
  *              In Closed Loop Torque mode acceleration value is in 0.1 * miliAmps per second. This command is not applicable if either of the acceleration (MAC) or deceleration (MDEC) configuration value is set to 0.
  * 
- * @params: uint8_t channel: Motor channel
+ * @params: uint8_t channel: Motor channel, int32_t value: Acceleration value in 0.1 * RPM/s
  */
 void RoboteqSerial::setAcceleration(uint8_t channel, int32_t value)
 {
@@ -719,7 +768,7 @@ void RoboteqSerial::setAcceleration(uint8_t channel, int32_t value)
  *              This value will become the next acceleration the controller will use and becomes active upon reaching a previous desired position. 
  *              If omitted, the command will be chained using the last used acceleration value. This command is not applicable if either of the acceleration (MAC) or deceleration (MDEC) configuration value is set to 0
  * 
- * @params: uint8_t channel: Motor channel
+ * @params: uint8_t channel: Motor channel, int32_t value: Acceleration value in 0.1 * RPM/s
  */
 void RoboteqSerial::nextAcceleration(uint8_t channel, int32_t value)
 {
@@ -749,7 +798,7 @@ void RoboteqSerial::spectrumBind(uint8_t channel)
 /**
  * @description: This command loads the encoder counter for the selected motor channel with the value contained in the command argument. Beware that changing the controller value while op-erating in closed-loop mode can have adverse effects.
  *
- *  @params: uint8_t channel: Motor channel, uint32_t value: Counter value
+ *  @params: uint8_t channel: Motor channel, int32_t value: Counter value
  */
 void RoboteqSerial::setEncoderCounters(uint8_t channel, int32_t value)
 {
@@ -1023,7 +1072,7 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage)
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argument)
@@ -1037,7 +1086,7 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argumen
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argument, int32_t value)
@@ -1052,7 +1101,7 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argumen
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 void RoboteqSerial::sendQuery(const char *message)
@@ -1064,7 +1113,7 @@ void RoboteqSerial::sendQuery(const char *message)
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 String RoboteqSerial::readQuery(const char *message)
@@ -1086,7 +1135,7 @@ String RoboteqSerial::readQuery(const char *message)
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
@@ -1102,7 +1151,7 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extra
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *respondMessage)
@@ -1114,7 +1163,7 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *r
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage)
@@ -1126,7 +1175,7 @@ int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char 
 /**
  * @description:
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  * @return: 
  */
 int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)

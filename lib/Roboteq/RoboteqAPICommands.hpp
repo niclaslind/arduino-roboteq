@@ -88,7 +88,7 @@ enum ReadTimeValue : uint8_t {
 
 const char *const readMotorAmpsQuery = "?A";
 const char *const readMotorAmpsRespond = "A=";
-const char *const readAnalogInputQuery = "?AIC_";
+const char *const readAnalogInputQuery = "?AIC";
 const char *const readAnalogInputRespond = "AIC=";
 const char *const readRotorAngleQuery = "?ÀNG_";
 const char *const readRotorAngleRespond = "ANG=";

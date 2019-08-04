@@ -16,7 +16,8 @@
 
 #pragma once
 
-#include <Arduino.h>
+
+
 #include <stdint.h>
 #include <Stream.h>
 #include "RoboteqAPICommands.hpp"
@@ -29,7 +30,7 @@ public:
 public:
     int16_t readMotorAmps();
     int16_t readMotorAmps(uint8_t channel);
-    int16_t readAnalogInput(uint8_t channel);
+    int16_t readAnalogInputAfterConversion(uint8_t channel);
     uint16_t readRotorAngle(uint8_t channel);
     uint16_t readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensorValue &value);
     bool readUserBooleanValue(uint8_t booleanVariable);
@@ -43,7 +44,7 @@ public:
     int32_t readConvertedAnalogCommand(uint8_t channel);
     int32_t readInternalPulseCommand(uint8_t channel);
     int32_t readInternalSerialCommand(uint8_t channel);
-    uint32_t readRoboCanAliveNodesMap(uint8_t channel);
+    uint32_t readRoboCanAliveNodesMap(uint8_t node);
     int32_t readEncoderCountRelative(uint8_t channel);
     uint32_t readDigitalInputs();
     uint8_t readIndividualDigitalInputs(uint8_t digitalInputNumber);
