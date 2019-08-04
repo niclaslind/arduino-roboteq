@@ -1,6 +1,22 @@
+/**
+   Copyright 2019 Niclas Lind
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 #pragma once
 
-#include <Arduino.h>
+#include <stdint.h>
 
 namespace RoboteqCommands
 {
@@ -187,11 +203,11 @@ const char *const setIndividualDigitalOutBitsCommand = "!D1";
 const char *const setDecelerationCommand = "!DC";
 const char *const setAllDigitalOutBitsCommand = "!DS";
 const char *const nextDeccelarationCommand = "!DX";
-const char *const saveConfigurationInEeporomCommand = "!EES";
-const char *const emergencyStopCommand = "!EX";
+const char *const saveConfigurationInEeporomCommand = "!EES_";
+const char *const emergencyStopCommand = "!EX_";
 const char *const goToSpeedOrToRelativePositionCommand = "!G";
 const char *const loadHomeCounterCommand = "!H";
-const char *const emergencyStopReleaseCommand = "!MG";
+const char *const emergencyStopReleaseCommand = "!MG_";
 const char *const stopInAllModesCommand = "!MS";
 const char *const goToAbsoluteDesiredPositionCommand = "!P";
 const char *const goToRelativeDesiredPositionCommand = "!PR";

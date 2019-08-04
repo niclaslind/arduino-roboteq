@@ -1,5 +1,22 @@
+/**
+   Copyright 2019 Niclas Lind
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 #pragma once
 
+#include <Arduino.h>
 #include <stdint.h>
 #include <Stream.h>
 #include "RoboteqAPICommands.hpp"
@@ -71,7 +88,7 @@ public:
     void setAcceleration(uint8_t channel, int32_t value);
     void nextAcceleration(uint8_t channel, int32_t value);
     void setUserBooleanVariable(uint8_t varNbr, bool value);
-    void multiPurposeBind(uint8_t channel);
+    void spectrumBind(uint8_t channel);
     void setEncoderCounters(uint8_t channel, int32_t value);
     void setBrushlessCounter(uint8_t channel, int32_t value);
     void setMotorCommandViaCan(uint8_t channel, int32_t value);
@@ -92,7 +109,7 @@ public:
     void nextGoToRelativeDesiredPosition(uint8_t channel, int32_t value);
     void nextGoToAbsoluteDesiredPosition(uint8_t channel, int32_t value);
     void microBasicRun(uint8_t mode);
-    void setPulseOut(uint8_t channel, int32_t value);
+    void setPulseOut(uint8_t channel, int16_t value);
     void setMotorSpeed(uint8_t channel, int32_t value);
     void nextVelocity(uint8_t channel, int32_t value);
     void setUserVarable(uint8_t varNbr, int32_t value);

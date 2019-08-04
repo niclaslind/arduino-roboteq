@@ -1,3 +1,19 @@
+/**
+   Copyright 2019 Niclas Lind
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
+
 #include "RoboteqSerial.hpp"
 
 RoboteqSerial::RoboteqSerial(Stream &stream)
@@ -691,7 +707,7 @@ int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
  *              Assuming that the Max RPM pa-rameter is set to 1000, and acceleration value of 10000 means that the motor will go from 0 to full speed in exactly 1 second, regardless of the actual motor speed. 
  *              In Closed Loop Torque mode acceleration value is in 0.1 * miliAmps per second. This command is not applicable if either of the acceleration (MAC) or deceleration (MDEC) configuration value is set to 0.
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  */
 void RoboteqSerial::setAcceleration(uint8_t channel, int32_t value)
 {
@@ -703,7 +719,7 @@ void RoboteqSerial::setAcceleration(uint8_t channel, int32_t value)
  *              This value will become the next acceleration the controller will use and becomes active upon reaching a previous desired position. 
  *              If omitted, the command will be chained using the last used acceleration value. This command is not applicable if either of the acceleration (MAC) or deceleration (MDEC) configuration value is set to 0
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  */
 void RoboteqSerial::nextAcceleration(uint8_t channel, int32_t value)
 {
@@ -713,7 +729,7 @@ void RoboteqSerial::nextAcceleration(uint8_t channel, int32_t value)
 /**
  * @description: Set the state of user boolean variables inside the controller. These variables can then be read from within a user MicroBasic script to perform specific actions.
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t varNbr: Variable number, bool value: true or false
  */
 void RoboteqSerial::setUserBooleanVariable(uint8_t varNbr, bool value)
 {
@@ -723,9 +739,9 @@ void RoboteqSerial::setUserBooleanVariable(uint8_t varNbr, bool value)
 /**
  * @description: When used on controllers with Spektrum RC radio interface the BND command is used to pair the receiver with its transmitter.
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel
  */
-void RoboteqSerial::multiPurposeBind(uint8_t channel)
+void RoboteqSerial::spectrumBind(uint8_t channel)
 {
     this->sendMotorCommand(RoboteqCommands::multiPurposeBindCommand, channel);
 }
@@ -733,7 +749,7 @@ void RoboteqSerial::multiPurposeBind(uint8_t channel)
 /**
  * @description: This command loads the encoder counter for the selected motor channel with the value contained in the command argument. Beware that changing the controller value while op-erating in closed-loop mode can have adverse effects.
  *
- *  @params: uint8_t channel: MotorChannel
+ *  @params: uint8_t channel: Motor channel, uint32_t value: Counter value
  */
 void RoboteqSerial::setEncoderCounters(uint8_t channel, int32_t value)
 {
@@ -743,7 +759,7 @@ void RoboteqSerial::setEncoderCounters(uint8_t channel, int32_t value)
 /**
  * @description: This command loads the brushless counter with the value contained in the command argument. Beware that changing the controller value while operating in closed-loop mode can have adverse effects. 
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel, int32_t value: Counter value
  */
 void RoboteqSerial::setBrushlessCounter(uint8_t channel, int32_t value)
 {
@@ -753,7 +769,7 @@ void RoboteqSerial::setBrushlessCounter(uint8_t channel, int32_t value)
 /**
  * @description: This command is identical to the G (GO) command except that it is meant to be used for sending motor commands via CANOpen. See the G command for details
  * 
- * @params: uint8_t channel: MotorChannel
+ * @params: uint8_t channel: Motor channel, int32_t value: Command value
  */
 void RoboteqSerial::setMotorCommandViaCan(uint8_t channel, int32_t value)
 {
@@ -764,8 +780,7 @@ void RoboteqSerial::setMotorCommandViaCan(uint8_t channel, int32_t value)
  * @description: This command is used in CAN-enabled controllers to build and send CAN frames in the RawCAN mode (See RawCAN section in manual). 
  *          It can be used to enter the header, bytecount, and data, one element at a time. The frame is sent immediately after the byte-count is entered, and so it should be entered last.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t element: 1= Header, 2= Bytecount, 3...10= Data0-Data7, uint8_t value: value
  */
 void RoboteqSerial::canSend(uint8_t element, uint8_t value)
 {
@@ -775,8 +790,7 @@ void RoboteqSerial::canSend(uint8_t element, uint8_t value)
 /**
  * @description: The D0 command will turn off the single digital output selected by the number that fol-lows. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: outputNbr: Output number
  */
 void RoboteqSerial::resetIndividualDigitalOutBits(uint8_t outputNbr)
 {
@@ -786,8 +800,7 @@ void RoboteqSerial::resetIndividualDigitalOutBits(uint8_t outputNbr)
 /**
  * @description: The D1 command will activate the single digital output that is selected by the parameter that follows
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: outputNbr: Output number
  */
 void RoboteqSerial::setIndividualOutBits(uint8_t outputNbr)
 {
@@ -804,8 +817,7 @@ void RoboteqSerial::setIndividualOutBits(uint8_t outputNbr)
  *              Assuming that the Max RPM parameter is set to 1000, and decceleration value of 10000 means that the motor will go from full speed to 0 in exactly 1 second, regardless of the actual motor speed.
  *              In Closed Loop Torque mode deceleration value is in 0.1 * miliAmps per second. This command is not applicable if either of the acceleration (MAC) or deceleration (MDEC) configuration value is set to 0.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Deceleration value in 0.1 * RPM/s
  */
 void RoboteqSerial::setDeceleration(uint8_t channel, int32_t value)
 {
@@ -815,8 +827,7 @@ void RoboteqSerial::setDeceleration(uint8_t channel, int32_t value)
 /**
  * @description: The D command will turn ON or OFF one or many digital outputs at the same time. The number can be a value from 0 to 255 and binary representation of that number has 1bit affected to its respective output pin
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t value: Bit pattern to be applied to all output lines at once
  */
 void RoboteqSerial::setAllDigitalOutBits(uint8_t value)
 {
@@ -828,8 +839,7 @@ void RoboteqSerial::setAllDigitalOutBits(uint8_t value)
  *              This value will become the next decceleration the controller will use and becomes active upon reaching a previous desired position. If omitted, the command will be chained using the last used decceleration value. 
  *              This command is not applicable if either of the acceleration (MAC) or deceleration (MDEC) configuration values is set to 0 (bypass command ramp). 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Acceleration value
  */
 void RoboteqSerial::nextDecceleration(uint8_t channel, int32_t value)
 {
@@ -839,9 +849,6 @@ void RoboteqSerial::nextDecceleration(uint8_t channel, int32_t value)
 /**
  * @description: This  command  causes any changes to the controller’s configuration to be saved to Flash. Saved configurations are then loaded again next time the controller is powered on. 
  *              This command is  a  duplication  of  the  EESAV  maintenance  command. It is provided as a Real-Time command as well in order to make it possible to save configuration changes from within MicroBasic scripts. 
- * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
  */
 void RoboteqSerial::saveConfigurationInEeprom()
 {
@@ -851,9 +858,6 @@ void RoboteqSerial::saveConfigurationInEeprom()
 /**
  * @description: The EX  command  will  cause  the  controller to  enter  an  emergency  stop  in the same way  as  if hardware  emergency  stop  was  detected  on  an  input  pin. 
  *              The  emergency  stop  condition  will remain until controller is reset or until the MG release command is received.
- * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
  */
 void RoboteqSerial::emergencyStop()
 {
@@ -864,8 +868,7 @@ void RoboteqSerial::emergencyStop()
  * @description: G is the main command for activating the motors. The command is a number ranging 1000 to +1000 so that the controller respond the same way as when commanded using Analog or Pulse, which are also -1000 to +1000 commands. 
  *              The effect of the command differs from one operating mode to another.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Command value
  */
 void RoboteqSerial::goToSpeedOrRelativePosition(uint8_t channel, int32_t value)
 {
@@ -878,8 +881,7 @@ void RoboteqSerial::goToSpeedOrRelativePosition(uint8_t channel, int32_t value)
  *              When SSI sensors are used as absolute encoders (Absolute Feedback) then this command loads to the Home count value the SSI sensor counter. 
  *              In this case the Home count value is used as offset to the SSI sensor Counter. Beware that loading the counter with the home value while the controller is operating in closed loop can have adverse effects
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
  */
 void RoboteqSerial::loadHomeCounter(uint8_t channel)
 {
@@ -889,9 +891,6 @@ void RoboteqSerial::loadHomeCounter(uint8_t channel)
 /**
  * @description: The MG command will release the emergency stop condition and allow the controller to return to normal operation. 
  *              Always make sure that the fault condition has been cleared before sending this command
- * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
  */
 void RoboteqSerial::emergencyStopRelease()
 {
@@ -901,8 +900,7 @@ void RoboteqSerial::emergencyStopRelease()
 /**
  * @description: The MS command will stop the motor for the specified motor channel.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel
  */
 void RoboteqSerial::stopInAllModes(uint8_t channel)
 {
@@ -912,8 +910,7 @@ void RoboteqSerial::stopInAllModes(uint8_t channel)
 /**
  * @description: This command is used in the Position Count mode to make the motor move to a specified feedback sensor count value.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Absolute count destination
  */
 void RoboteqSerial::goToAbsoluteDesiredPosition(uint8_t channel, int32_t value)
 {
@@ -923,8 +920,7 @@ void RoboteqSerial::goToAbsoluteDesiredPosition(uint8_t channel, int32_t value)
 /**
  * @description: This command is used in the Position Count mode to make the motor move to a feedback sensor count position that is relative to its current desired position. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Relative count position
  */
 void RoboteqSerial::goToRelativeDesiredPosition(uint8_t channel, int32_t value)
 {
@@ -936,8 +932,7 @@ void RoboteqSerial::goToRelativeDesiredPosition(uint8_t channel, int32_t value)
  *              This value becomes active upon reaching a previous desired position and will become the next destination the controller will go to. 
  *              See Position Command Chaining in manual.
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Relative count position
  */
 void RoboteqSerial::nextGoToRelativeDesiredPosition(uint8_t channel, int32_t value)
 {
@@ -949,8 +944,7 @@ void RoboteqSerial::nextGoToRelativeDesiredPosition(uint8_t channel, int32_t val
  *              This value will become the next destination the controller will go to and becomes active upon reaching a previous desired position.
  *              See Position Command Chaining in manual. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Absolute count position
  */
 void RoboteqSerial::nextGoToAbsoluteDesiredPosition(uint8_t channel, int32_t value)
 {
@@ -960,8 +954,7 @@ void RoboteqSerial::nextGoToAbsoluteDesiredPosition(uint8_t channel, int32_t val
 /**
  * @description: This command is used to start, stop and restart a MicroBasic script if one is loaded in the controller. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t mode: 0= Stop script, 1= Start/resume script, 2: Reinitialize and restart script
  */
 void RoboteqSerial::microBasicRun(uint8_t mode)
 {
@@ -972,10 +965,9 @@ void RoboteqSerial::microBasicRun(uint8_t mode)
  * @description: Set the pulse width on products with pulse outputs. 
  *              Command ranges from -1000 to +1000, resulting in pulse width of 1.0ms to 1.5ms respectively. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int16_t value: Value
  */
-void RoboteqSerial::setPulseOut(uint8_t channel, int32_t value)
+void RoboteqSerial::setPulseOut(uint8_t channel, int16_t value)
 {
     this->sendMotorCommand(RoboteqCommands::setPulseOutCommand, channel, value);
 }
@@ -985,8 +977,7 @@ void RoboteqSerial::setPulseOut(uint8_t channel, int32_t value)
  *              In Closed-Loop Position modes, this commands determines the speed at which the motor will move from one position to the next. 
  *              It will not actually start the motion. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel. int32_t value: Speed value in RPM
  */
 void RoboteqSerial::setMotorSpeed(uint8_t channel, int32_t value)
 {
@@ -999,8 +990,7 @@ void RoboteqSerial::setMotorSpeed(uint8_t channel, int32_t value)
  *              If omitted, the command will be chained using the last used velocity value. 
  *              See Position Command Chaining in manual. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t channel: Motor channel, int32_t value: Velocity value
  */
 void RoboteqSerial::nextVelocity(uint8_t channel, int32_t value)
 {
@@ -1013,8 +1003,7 @@ void RoboteqSerial::nextVelocity(uint8_t channel, int32_t value)
  *              The total number of variables depends on the controller model and can be found in the product datasheet. 
  *              Variables are signed 32-bit integers. 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: uint8_t varNbr: Variable number, int32_t value: Value
  */
 void RoboteqSerial::setUserVarable(uint8_t varNbr, int32_t value)
 {
@@ -1022,10 +1011,9 @@ void RoboteqSerial::setUserVarable(uint8_t varNbr, int32_t value)
 }
 
 /**
- * @description:
+ * @description: 
  * 
- * @params: uint8_t channel: MotorChannel
- * @return: 
+ * @params: const char * commandMessage: Message to be sent on serial
  */
 void RoboteqSerial::sendMotorCommand(const char *commandMessage)
 {
