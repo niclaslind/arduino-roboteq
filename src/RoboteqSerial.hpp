@@ -22,6 +22,8 @@
 #include <Stream.h>
 #include "RoboteqAPICommands.hpp"
 
+using namespace RoboteqApi;
+
 class RoboteqSerial
 {
 public:
@@ -32,7 +34,7 @@ public:
     int16_t readMotorAmps(uint8_t channel);
     int16_t readAnalogInputAfterConversion(uint8_t channel);
     uint16_t readRotorAngle(uint8_t channel);
-    uint16_t readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensorValue &value);
+    uint16_t readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value);
     bool readUserBooleanValue(uint8_t booleanVariable);
     int16_t readBatteryAmps(uint8_t channel);
     int32_t readBrushlessCountRelative(uint8_t channel);
@@ -63,11 +65,11 @@ public:
     uint16_t readSpektrumReceiver(uint8_t radioChannel);
     uint8_t readLockStatus();
     uint8_t readMotorCommandApplied(uint8_t channel);
-    int16_t readFieldOrientedControlMotorAmps(RoboteqCommands::ReadFieldOrientedControlMotorAmpsValue &value);
+    int16_t readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value);
     uint8_t readMagsensorTrackDetect(uint8_t channel);
-    uint8_t readMagsensorMarkers(RoboteqCommands::ReadMagsensorMarkersValue &value);
+    uint8_t readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value);
     int16_t readMagsensorStatus();
-    int16_t readMagsensorTrackPosition(RoboteqCommands::ReadMagsensorTrackPositionValue &value);
+    int16_t readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value);
     int16_t readMagsensorGyroscope(uint8_t channel);
     int16_t readMotorPowerOutputApplied(uint8_t channel);
     uint16_t readPulseInput(uint8_t channel);
@@ -75,13 +77,13 @@ public:
     int16_t readEncoderMotorSpeedInRpm(uint8_t channel);
     uint32_t readScriptChecksum();
     int16_t readEncoderSpeedRelative(uint8_t channel);
-    int8_t readTemperature(RoboteqCommands::ReadTemperatureValue &value);
-    uint32_t readTime(RoboteqCommands::ReadTimeValue &value);
+    int8_t readTemperature(RoboteqApi::ReadTemperatureValue value);
+    uint32_t readTime(RoboteqApi::ReadTimeValue &value);
     int32_t readPositionRelativeTracking(uint8_t channel);
     String readControlUnitTypeAndControllerModel();
-    uint32_t readMcuID(RoboteqCommands::ReadMcuIdValue &value);
-    uint16_t readVolts(RoboteqCommands::ReadVoltsValue &value);
-    uint16_t readVolts();
+    uint32_t readMcuID(RoboteqApi::ReadMcuIdValue value);
+    uint16_t readVolts(RoboteqApi::ReadVoltsValue value);
+    String readVolts();
     int32_t readUserIntegerVariable(uint8_t variableNumber);
     int16_t readSlipFrequency(uint8_t channel);
 

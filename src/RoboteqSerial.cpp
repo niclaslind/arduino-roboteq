@@ -94,7 +94,7 @@ uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
  * @params: ReadRawSinCosSensorValue value: Which input you want to read
  * @return: ADC value
  */
-uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqCommands::ReadRawSinCosSensorValue &value)
+uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, value, RoboteqCommands::readRotorAngleRespond);
 }
@@ -448,7 +448,7 @@ uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
 }
 
 /**
- * @description:Returns the status of the lock flag. If the configuration is locked, then it will not be possi-ble to read any configuration parameters until the lock is removed or until the parameters are reset to factory default.
+ * @description: Returns the status of the lock flag. If the configuration is locked, then it will not be possi-ble to read any configuration parameters until the lock is removed or until the parameters are reset to factory default.
  *             This feature is useful to protect the controller configuration from being copied by unauthorized people.
  * 
  * @params: uint8_t channel: Motor channel
@@ -483,7 +483,7 @@ uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
  * @params: uint8_t ReadFieldOrientedControlMotorAmpsValue: value
  * @return: Amps * 10
  */
-int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqCommands::ReadFieldOrientedControlMotorAmpsValue &value)
+int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, value, RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
 }
@@ -511,7 +511,7 @@ uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
  * @params: uint8_t channel: Motor channel
  * @return: 0: No marker detected, 1: Marker detected
  */
-uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqCommands::ReadMagsensorMarkersValue &value)
+uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, value, RoboteqCommands::readMagsensorMarkersRespond);
 }
@@ -540,7 +540,7 @@ int16_t RoboteqSerial::readMagsensorStatus()
  * @params: uint8_t channel: Motor channel
  * @return: Position in millimeters
  */
-int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqCommands::ReadMagsensorTrackPositionValue &value)
+int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, value, RoboteqCommands::readMagsensorTrackPositionRespond);
 }
@@ -642,7 +642,7 @@ int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
  * @params: ReadTemperatureValue value: Temp element you want to read
  * @return: Temperature in degrees
  */
-int8_t RoboteqSerial::readTemperature(RoboteqCommands::ReadTemperatureValue &value)
+int8_t RoboteqSerial::readTemperature(RoboteqApi::ReadTemperatureValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, value, RoboteqCommands::readTemperatureRespond);
 }
@@ -656,7 +656,7 @@ int8_t RoboteqSerial::readTemperature(RoboteqCommands::ReadTemperatureValue &val
  * @return: Value
  */
 // TODO: check this fuction
-uint32_t RoboteqSerial::readTime(RoboteqCommands::ReadTimeValue &value)
+uint32_t RoboteqSerial::readTime(RoboteqApi::ReadTimeValue &value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery, RoboteqCommands::readTimeRespond);
 }
@@ -689,7 +689,7 @@ String RoboteqSerial::readControlUnitTypeAndControllerModel()
  * @params: ReadMcuIdValue &value: Data element you want to read
  * @return: Value 
  */
-uint32_t RoboteqSerial::readMcuID(RoboteqCommands::ReadMcuIdValue &value)
+uint32_t RoboteqSerial::readMcuID(RoboteqApi::ReadMcuIdValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, value, RoboteqCommands::readMcuIDRespond);
 }
@@ -701,10 +701,10 @@ uint32_t RoboteqSerial::readMcuID(RoboteqCommands::ReadMcuIdValue &value)
  *              The 5V output will typically show the controller’s internal regulated 5V minus the drop of a diode that is used for protection and will be in the 4.7V range. 
  *              The battery voltage is monitored for detecting the undervoltage or overvoltage con-ditions.
  * 
- * @params: uint8_t channel: Motor channel
- * @return: Volts * 10 for internal and battery volts. Milivolts for 5V output
+ * @params: uint8_t channel: MotorChannel
+ * @return: voltage value in millivolts
  */
-uint16_t RoboteqSerial::readVolts(RoboteqCommands::ReadVoltsValue &value)
+uint16_t RoboteqSerial::readVolts(RoboteqApi::ReadVoltsValue value)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, value, RoboteqCommands::readVoltsRespond);
 }
@@ -718,9 +718,9 @@ uint16_t RoboteqSerial::readVolts(RoboteqCommands::ReadVoltsValue &value)
  * 
  * @return: Volts * 10 for internal and battery volts. Milivolts for 5V output
  */
-uint16_t RoboteqSerial::readVolts()
+String RoboteqSerial::readVolts()
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond);
+    return this->handleQueryRequest(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond);
 }
 
 /**
@@ -914,7 +914,8 @@ void RoboteqSerial::emergencyStop()
 }
 
 /**
- * @description: G is the main command for activating the motors. The command is a number ranging 1000 to +1000 so that the controller respond the same way as when commanded using Analog or Pulse, which are also -1000 to +1000 commands. 
+ * @description: G is the main command for activating the motors. 
+ *              The command is a number ranging 1000 to +1000 so that the controller respond the same way as when commanded using Analog or Pulse, which are also -1000 to +1000 commands. 
  *              The effect of the command differs from one operating mode to another.
  * 
  * @params: uint8_t channel: Motor channel, int32_t value: Command value
@@ -1066,7 +1067,9 @@ void RoboteqSerial::setUserVarable(uint8_t varNbr, int32_t value)
  */
 void RoboteqSerial::sendMotorCommand(const char *commandMessage)
 {
-    this->sendQuery(commandMessage);
+    String command = commandMessage;
+    command += "_";
+    this->sendQuery(command.c_str());
 }
 
 /**
@@ -1078,6 +1081,7 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage)
 void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argument)
 {
     String command = commandMessage;
+    command += " ";
     command += argument;
     command += "_";
     this->sendQuery(command.c_str());
@@ -1092,7 +1096,9 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argumen
 void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argument, int32_t value)
 {
     String command = commandMessage;
+    command += " ";
     command += argument;
+    command += " ";
     command += value;
     command += "_";
     this->sendQuery(command.c_str());
@@ -1141,6 +1147,7 @@ String RoboteqSerial::readQuery(const char *message)
 String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
 {
     String query = queryMessage;
+    query += " ";
     query += String(extraParameter);
     query += "_";
 
@@ -1151,12 +1158,15 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extra
 /**
  * @description:
  * 
- * @params: uint8_t channel: Motor channel
+ * @params: const char* queryMessage: Message you want to send to Roboteq
+ *          const char* respondMessage: Message you excpect to get back from Roboteq
  * @return: 
  */
 String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *respondMessage)
 {
-    this->sendQuery(queryMessage);
+    String query = queryMessage;
+    query += "_";
+    this->sendQuery(query.c_str());
     return this->readQuery(respondMessage);
 }
 
@@ -1168,7 +1178,9 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *r
  */
 int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage)
 {
-    this->sendQuery(queryMessage);
+    String query = queryMessage;
+    query += "_";
+    this->sendQuery(query.c_str());
     return this->readQuery(respondMessage).toInt();
 }
 
@@ -1181,6 +1193,7 @@ int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char 
 int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
 {
     String query = queryMessage;
+    query += " ";
     query += String(extraParameter);
     query += "_";
 
