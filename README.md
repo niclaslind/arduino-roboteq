@@ -1,6 +1,21 @@
 ## Arduino Library for Roboteq Motor Controllers
 
-## All functions
+This project has been created to be able to easily communicate with a Roboteq Controller via a uart port on eg. and Arudino.
+
+## Getting Started
+
+##### PlatformIO
+
+For platformIO-users, the easiest way is to add this line below in your platformio.ini file
+
+```
+  libdeps=
+    https://github.com/niclaslind/arduino-roboteq
+```
+
+##### Arduino IDE
+
+For ArudinoIDE-users, the easiest way is to download this repo and put it in your local Arduino-library folder
 
 ### Runtime-queries
 
