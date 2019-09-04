@@ -48,7 +48,6 @@ For ArudinoIDE-users, the easiest way is to download this repo and put it in you
     String readFirmwareID();
     int16_t readFaultFlags();
     int16_t readRuntimeStatusFlag(uint8_t channel);
-    int16_t raedRuntimeStatusFlag(uint8_t channel);
     uint8_t readStatusFlag();
     uint8_t readHallSensorStates(uint8_t channel);
     uint8_t isRoboCanNodeAlive(uint8_t nodeID);
