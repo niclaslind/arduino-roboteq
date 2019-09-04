@@ -9,7 +9,7 @@ This project has been created to be able to easily communicate with a Roboteq Co
 For platformIO-users, the easiest way is to add this line below in your platformio.ini file
 
 ```
-  libdeps=
+  lib_deps=
     https://github.com/niclaslind/arduino-roboteq
 ```
 
