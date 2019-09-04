@@ -1,5 +1,5 @@
 {
-    "name": "RoboteqArduino",
+    "name": "ArduinoRoboteq",
     "keywords": "Roboteq, motorcontroller, RoboteqArduino, Serial",
     "description": "Arduino Library for Roboteq Serial Communication",
     "repository":
