@@ -1,3 +1,5 @@
+
+#ifndef UNIT_TEST
 #if ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -5,11 +7,13 @@ extern "C" {
 #include "WConstants.h"
 }
 #endif
+#endif
+
 
 #include "RoboteqSerial.hpp"
 
 RoboteqSerial::RoboteqSerial(Stream &stream)
-    : _serial(stream)
+    : _stream(stream)
 {
 }
 
@@ -1096,8 +1100,8 @@ void RoboteqSerial::sendMotorCommand(const char *commandMessage, uint8_t argumen
  */
 void RoboteqSerial::sendQuery(const char *message)
 {
-    this->_serial.write(message, strlen(message));
-    this->_serial.flush();
+    this->_stream.write(message, strlen(message));
+    this->_stream.flush();
 }
 
 /**
@@ -1110,9 +1114,9 @@ String RoboteqSerial::readQuery(const char *message)
 {
     String inputString;
     unsigned long startTime = millis();
-    while (millis() - startTime < _timeout && _serial.available())
+    while (millis() - startTime < _timeout && _stream.available())
     {
-        inputString = _serial.readStringUntil('\r');
+        inputString = _stream.readStringUntil('\r');
 
         if (inputString.startsWith(message))
         {

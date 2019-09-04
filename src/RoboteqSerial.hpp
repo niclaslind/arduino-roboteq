@@ -115,6 +115,6 @@ private:
     int handleQueryRequestToInt(const char *queryMessage, const char *respondMessage);
 
 private:
-    Stream &_serial;
+    Stream &_stream;
     uint8_t _timeout = 200;
 };
