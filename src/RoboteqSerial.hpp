@@ -11,6 +11,7 @@ class RoboteqSerial
 public:
     explicit RoboteqSerial(Stream &stream);
 
+    // Runtime-Queries
 public:
     int16_t readMotorAmps();
     int16_t readMotorAmps(uint8_t channel);
@@ -69,6 +70,7 @@ public:
     int32_t readUserIntegerVariable(uint8_t variableNumber);
     int16_t readSlipFrequency(uint8_t channel);
 
+    // Motor commands
 public:
     void setAcceleration(uint8_t channel, int32_t value);
     void nextAcceleration(uint8_t channel, int32_t value);
