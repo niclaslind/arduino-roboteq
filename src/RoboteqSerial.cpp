@@ -1,5 +1,3 @@
-
-#ifndef UNIT_TEST
 #if ARDUINO >= 100
 #include "Arduino.h"
 #else
@@ -7,8 +5,6 @@ extern "C" {
 #include "WConstants.h"
 }
 #endif
-#endif
-
 
 #include "RoboteqSerial.hpp"
 
@@ -84,7 +80,7 @@ uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
  */
 uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, value, RoboteqCommands::readRotorAngleRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, uint8_t(value), RoboteqCommands::readRotorAngleRespond);
 }
 
 /**
@@ -473,7 +469,7 @@ uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
  */
 int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, value, RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, uint8_t(value), RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
 }
 
 /**
@@ -501,7 +497,7 @@ uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
  */
 uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, value, RoboteqCommands::readMagsensorMarkersRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, uint8_t(value), RoboteqCommands::readMagsensorMarkersRespond);
 }
 
 /**
@@ -530,7 +526,7 @@ int16_t RoboteqSerial::readMagsensorStatus()
  */
 int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, value, RoboteqCommands::readMagsensorTrackPositionRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, uint8_t(value), RoboteqCommands::readMagsensorTrackPositionRespond);
 }
 
 /**
@@ -632,7 +628,7 @@ int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
  */
 int8_t RoboteqSerial::readTemperature(RoboteqApi::ReadTemperatureValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, value, RoboteqCommands::readTemperatureRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, uint8_t(value), RoboteqCommands::readTemperatureRespond);
 }
 
 /**
@@ -679,7 +675,7 @@ String RoboteqSerial::readControlUnitTypeAndControllerModel()
  */
 uint32_t RoboteqSerial::readMcuID(RoboteqApi::ReadMcuIdValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, value, RoboteqCommands::readMcuIDRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, uint8_t(value), RoboteqCommands::readMcuIDRespond);
 }
 
 /**
@@ -694,7 +690,7 @@ uint32_t RoboteqSerial::readMcuID(RoboteqApi::ReadMcuIdValue value)
  */
 uint16_t RoboteqSerial::readVolts(RoboteqApi::ReadVoltsValue value)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, value, RoboteqCommands::readVoltsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, uint8_t(value), RoboteqCommands::readVoltsRespond);
 }
 
 /**
