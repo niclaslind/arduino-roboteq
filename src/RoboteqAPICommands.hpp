@@ -21,7 +21,7 @@
 namespace RoboteqApi
 {
 
-enum ReadRawSinCosSensorValue : uint8_t
+enum class ReadRawSinCosSensorValue : uint8_t
 {
     SinInput1_SsiInput1 = 1,
     CosInput1,
@@ -29,7 +29,7 @@ enum ReadRawSinCosSensorValue : uint8_t
     CosInput2
 };
 
-enum ReadFieldOrientedControlMotorAmpsValue : uint8_t
+enum class ReadFieldOrientedControlMotorAmpsValue : uint8_t
 {
     FluxAmps1 = 1,
     TorqueAmps1,
@@ -40,7 +40,7 @@ enum ReadFieldOrientedControlMotorAmpsValue : uint8_t
 /**
  * @note: If only one sensor is enabled, only use variables for input1
  */
-enum ReadMagsensorMarkersValue : uint8_t
+enum class ReadMagsensorMarkersValue : uint8_t
 {
     LeftMarkerOfSensorAtPulseInput1 = 1,
     RightMarkerOfSensorAtPulseInput1,
@@ -51,7 +51,7 @@ enum ReadMagsensorMarkersValue : uint8_t
 /**
  * @note: If only one sensor is enabled, only use variables for input1
  */
-enum ReadMagsensorTrackPositionValue : uint8_t
+enum class ReadMagsensorTrackPositionValue : uint8_t
 {
     LeftTrackOfSensorAtPulseInput1 = 1,
     RightTrackOfSensorAtPulseInput1,
@@ -61,14 +61,14 @@ enum ReadMagsensorTrackPositionValue : uint8_t
     ActiveTrackOfSensorAtPulseInput2
 };
 
-enum ReadTemperatureValue : uint8_t
+enum class ReadTemperatureValue : uint8_t
 {
     McuTemperature = 1,
     Channel1Side,
-    Channel2Side,
+    Channel2Side
 };
 
-enum ReadTimeValue : uint8_t
+enum class ReadTimeValue : uint8_t
 {
     Seconds = 1,
     Minutes,
@@ -78,20 +78,20 @@ enum ReadTimeValue : uint8_t
     YearInFull
 };
 
-enum ReadMcuIdValue : uint8_t
+enum class ReadMcuIdValue : uint8_t
 {
     McuType = 1,
     McuDeviceId,
     McuUniqueId1,
     McuUniqueId2,
-    McuUniqueId3,
+    McuUniqueId3
 };
 
-enum ReadVoltsValue : uint8_t
+enum class ReadVoltsValue : uint8_t
 {
     InternalVolts = 1,
     BatteryVolts,
-    FiveVoltsOutput,
+    FiveVoltsOutput
 };
 
 }; // namespace RoboteqApi
