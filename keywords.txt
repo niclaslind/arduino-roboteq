@@ -1,9 +1,8 @@
 # Words in here will be highlighted in Arduino IDE
 
-RoboteqSerial (KEYWORD1)
+RoboteqSerial KEYWORD1
 
-readMotorAmps                           (KEYWORD2)
-readMotorAmps                           (KEYWORD2)
+readMotorAmps                            KEYWORD2
 readAnalogInputAfterConversion          (KEYWORD2)
 readRotorAngle                          (KEYWORD2)
 readRawSinCosSensor                     (KEYWORD2)
