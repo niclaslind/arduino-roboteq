@@ -1,86 +1,148 @@
 # Words in here will be highlighted in Arduino IDE
 
-RoboteqSerial KEYWORD1
+RoboteqSerial	KEYWORD1
 
-readMotorAmps                            KEYWORD2
-readAnalogInputAfterConversion          (KEYWORD2)
-readRotorAngle                          (KEYWORD2)
-readRawSinCosSensor                     (KEYWORD2)
-readUserBooleanValue                    (KEYWORD2)
-readBatteryAmps                         (KEYWORD2)
-readBrushlessCountRelative              (KEYWORD2)
-readBLMotorSpeedInRpm                   (KEYWORD2)
-readEncoderCounterAbsolut               (KEYWORD2)
-readRawCanFrame                         (KEYWORD2)
-readAbsoluteBrushlessCounter            (KEYWORD2)
-readRawCanReceivedFramesCount           (KEYWORD2)
-readConvertedAnalogCommand              (KEYWORD2)
-readInternalPulseCommand                (KEYWORD2)
-readInternalSerialCommand               (KEYWORD2)
-readRoboCanAliveNodesMap                (KEYWORD2)
-readEncoderCountRelative                (KEYWORD2)
-readDigitalInputs                       (KEYWORD2)
-readIndividualDigitalInputs             (KEYWORD2)
-readDigitalOutputStatus                 (KEYWORD2)
-readDestinationReached                  (KEYWORD2)
-readClosedLoopError                     (KEYWORD2)
-readFeedback                            (KEYWORD2)
-readFocAngleAdjust                      (KEYWORD2)
-readFirmwareID                          (KEYWORD2)
-readFaultFlags                          (KEYWORD2)
-readRuntimeStatusFlag                   (KEYWORD2)
-readStatusFlag                          (KEYWORD2)
-readHallSensorStates                    (KEYWORD2)
-isRoboCanNodeAlive                      (KEYWORD2)
-readSpektrumReceiver                    (KEYWORD2)
-readLockStatus                          (KEYWORD2)  
-readMotorCommandApplied                 (KEYWORD2)
-readFieldOrientedControlMotorAmps       (KEYWORD2)
-readMagsensorTrackDetect                (KEYWORD2)
-readMagsensorMarkers                    (KEYWORD2)
-readMagsensorStatus                     (KEYWORD2)
-readMagsensorTrackPosition              (KEYWORD2)
-readMagsensorGyroscope                  (KEYWORD2)
-readMotorPowerOutputApplied             (KEYWORD2)
-readPulseInput                          (KEYWORD2)
-readPulseInputAfterConversion           (KEYWORD2)
-readEncoderMotorSpeedInRpm              (KEYWORD2)
-readScriptChecksum                      (KEYWORD2)
-readEncoderSpeedRelative                (KEYWORD2)
-readTemperature                         (KEYWORD2)
-readTime                                (KEYWORD2)
-readPositionRelativeTracking            (KEYWORD2)
-readControlUnitTypeAndControllerModel   (KEYWORD2)
-readMcuID                               (KEYWORD2)
-readVolts                               (KEYWORD2)
-readUserIntegerVariable                 (KEYWORD2)
-readSlipFrequency                       (KEYWORD2)
+################
+# Motor Queries 
+################
 
-setAcceleration                         (KEYWORD2)
-nextAcceleration                        (KEYWORD2)
-setUserBooleanVariable                  (KEYWORD2)
-spectrumBind                            (KEYWORD2)
-setEncoderCounters                      (KEYWORD2)
-setBrushlessCounter                     (KEYWORD2)
-setMotorCommandViaCan                   (KEYWORD2)
-canSend                                 (KEYWORD2)
-resetIndividualDigitalOutBits           (KEYWORD2)
-setIndividualOutBits                    (KEYWORD2)
-setDeceleration                         (KEYWORD2)
-setAllDigitalOutBits                    (KEYWORD2)
-nextDecceleration                       (KEYWORD2)
-saveConfigurationInEeprom               (KEYWORD2)
-emergencyStop                           (KEYWORD2)
-goToSpeedOrRelativePosition             (KEYWORD2)
-loadHomeCounter                         (KEYWORD2)
-emergencyStopRelease                    (KEYWORD2)
-stopInAllModes                          (KEYWORD2)
-goToAbsoluteDesiredPosition             (KEYWORD2)
-goToRelativeDesiredPosition             (KEYWORD2)
-nextGoToRelativeDesiredPosition         (KEYWORD2)
-nextGoToAbsoluteDesiredPosition         (KEYWORD2)
-microBasicRun                           (KEYWORD2)
-setPulseOut                             (KEYWORD2)
-setMotorSpeed                           (KEYWORD2)
-nextVelocity                            (KEYWORD2)
-setUserVarable                          (KEYWORD2)
+readMotorAmps	KEYWORD2
+readAnalogInputAfterConversion	KEYWORD2
+readRotorAngle	KEYWORD2
+readRawSinCosSensor	KEYWORD2
+readUserBooleanValue	KEYWORD2
+readBatteryAmps	KEYWORD2
+readBrushlessCountRelative	KEYWORD2
+readBLMotorSpeedInRpm	KEYWORD2
+readEncoderCounterAbsolut	KEYWORD2
+readRawCanFrame	KEYWORD2
+readAbsoluteBrushlessCounter	KEYWORD2
+readRawCanReceivedFramesCount	KEYWORD2
+readConvertedAnalogCommand	KEYWORD2
+readInternalPulseCommand	KEYWORD2
+readInternalSerialCommand	KEYWORD2
+readRoboCanAliveNodesMap	KEYWORD2
+readEncoderCountRelative	KEYWORD2
+readDigitalInputs	KEYWORD2
+readIndividualDigitalInputs	KEYWORD2
+readDigitalOutputStatus	KEYWORD2
+readDestinationReached	KEYWORD2
+readClosedLoopError	KEYWORD2
+readFeedback	KEYWORD2
+readFocAngleAdjust	KEYWORD2
+readFirmwareID	KEYWORD2
+readFaultFlags	KEYWORD2
+readRuntimeStatusFlag	KEYWORD2
+readStatusFlag	KEYWORD2
+readHallSensorStates	KEYWORD2
+isRoboCanNodeAlive	KEYWORD2
+readSpektrumReceiver	KEYWORD2
+readLockStatus	KEYWORD2  
+readMotorCommandApplied	KEYWORD2
+readFieldOrientedControlMotorAmps	KEYWORD2
+readMagsensorTrackDetect	KEYWORD2
+readMagsensorMarkers	KEYWORD2
+readMagsensorStatus	KEYWORD2
+readMagsensorTrackPosition	KEYWORD2
+readMagsensorGyroscope	KEYWORD2
+readMotorPowerOutputApplied	KEYWORD2
+readPulseInput	KEYWORD2
+readPulseInputAfterConversion	KEYWORD2
+readEncoderMotorSpeedInRpm	KEYWORD2
+readScriptChecksum	KEYWORD2
+readEncoderSpeedRelative	KEYWORD2
+readTemperature	KEYWORD2
+readTime	KEYWORD2
+readPositionRelativeTracking	KEYWORD2
+readControlUnitTypeAndControllerModel	KEYWORD2
+readMcuID	KEYWORD2
+readVolts	KEYWORD2
+readUserIntegerVariable	KEYWORD2
+readSlipFrequency	KEYWORD2
+
+####################
+# Motor Commands
+####################
+
+setAcceleration	KEYWORD2
+nextAcceleration	KEYWORD2
+setUserBooleanVariable	KEYWORD2
+spectrumBind	KEYWORD2
+setEncoderCounters	KEYWORD2
+setBrushlessCounter	KEYWORD2
+setMotorCommandViaCan	KEYWORD2
+canSend	KEYWORD2
+resetIndividualDigitalOutBits	KEYWORD2
+setIndividualOutBits	KEYWORD2
+setDeceleration	KEYWORD2
+setAllDigitalOutBits	KEYWORD2
+nextDecceleration	KEYWORD2
+saveConfigurationInEeprom	KEYWORD2
+emergencyStop	KEYWORD2
+goToSpeedOrRelativePosition	KEYWORD2
+loadHomeCounter	KEYWORD2
+emergencyStopRelease	KEYWORD2
+stopInAllModes	KEYWORD2
+goToAbsoluteDesiredPosition	KEYWORD2
+goToRelativeDesiredPosition	KEYWORD2
+nextGoToRelativeDesiredPosition	KEYWORD2
+nextGoToAbsoluteDesiredPosition	KEYWORD2
+microBasicRun	KEYWORD2
+setPulseOut	KEYWORD2
+setMotorSpeed	KEYWORD2
+nextVelocity	KEYWORD2
+setUserVarable	KEYWORD2
+
+###############
+# Class Enums
+###############
+
+ReadRawSinCosSensorValue	KEYWORD3
+ReadFieldOrientedControlMotorAmpsValue	KEYWORD3
+ReadMagsensorMarkersValue	KEYWORD3
+ReadMagsensorTrackPositionValue	KEYWORD3
+ReadTemperatureValue	KEYWORD3
+ReadTimeValue	KEYWORD3
+ReadMcuIdValue	KEYWORD3
+ReadVoltsValue KEYWORD3
+
+#####################
+# Enum properties
+#####################
+
+SinInput1_SsiInput1	LITERAL1
+CosInput1	LITERAL1
+SinInput2_SsiInput2	LITERAL1
+CosInput2	LITERAL1
+FluxAmps1	LITERAL1
+TorqueAmps1	LITERAL1
+FluxAmps2	LITERAL1
+TorqueAmps2	LITERAL1
+LeftMarkerOfSensorAtPulseInput1	LITERAL1
+RightMarkerOfSensorAtPulseInput1	LITERAL1
+LeftMarkerOfSensorAtPulseInput2	LITERAL1
+RightMarkerOfSensorAtPulseInput2	LITERAL1
+LeftTrackOfSensorAtPulseInput1	LITERAL1
+RightTrackOfSensorAtPulseInput1	LITERAL1
+ActiveTrackOfSensorAtPulseInput1	LITERAL1
+LeftTrackOfSensorAtPulseInput2	LITERAL1
+RightTrackOfSensorAtPulseInput2	LITERAL1
+ActiveTrackOfSensorAtPulseInput2	LITERAL1
+McuTemperature	LITERAL1
+Channel1Side	LITERAL1
+Channel2Side	LITERAL1
+Seconds	LITERAL1
+Minutes	LITERAL1
+Hours	LITERAL1
+DayOfMonth	LITERAL1
+Month	LITERAL1
+YearInFull	LITERAL1
+McuType	LITERAL1
+McuDeviceId	LITERAL1
+McuUniqueId1	LITERAL1
+McuUniqueId2	LITERAL1
+McuUniqueId3	LITERAL1
+InternalVolts	LITERAL1
+BatteryVolts	LITERAL1
+FiveVoltsOutput	LITERAL1
+
