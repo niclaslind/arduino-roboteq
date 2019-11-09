@@ -1,6 +1,6 @@
 ## Arduino Library for Roboteq Motor Controllers
 
-This project has been created to be able to easily communicate with a Roboteq Controller via a uart port on eg. and Arudino.
+This project has been created to be able to easily communicate with a Roboteq Controller through an uart port on eg. and Arudino.
 
 ## Getting Started
 
