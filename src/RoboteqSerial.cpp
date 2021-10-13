@@ -1110,13 +1110,16 @@ String RoboteqSerial::readQuery(const char *message)
 {
     String inputString;
     unsigned long startTime = millis();
-    while (millis() - startTime < _timeout && _stream.available())
+    while (millis() - startTime < _timeout)
     {
-        inputString = _stream.readStringUntil('\r');
-
-        if (inputString.startsWith(message))
+        if(_stream.available())
         {
-            return inputString.substring(inputString.indexOf("=") + 1);
+            inputString = _stream.readStringUntil('\r');
+
+            if (inputString.startsWith(message))
+            {
+                return inputString.substring(inputString.indexOf("=") + 1);
+            }
         }
     }
     return "-1";
