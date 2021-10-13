@@ -30,6 +30,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade platformio
     - name: Run PlatformIO
-      run: pio ci --board=uno --board=Adafruit ESP32 Feather
+      run: pio ci --board=uno --board=featheresp32
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
