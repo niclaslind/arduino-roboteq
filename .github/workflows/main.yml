@@ -32,6 +32,6 @@ jobs:
     - name: Install library dependencies
       run: pio lib -g install "niclaslind/ArduinoRoboteq"
     - name: Run PlatformIO
-      run: pio ci --board=uno --board=featheresp32
+      run: pio ci --board=uno --board=featheresp32 --board=ATmega2560
       env:
         PLATFORMIO_CI_SRC: ${{ matrix.example }}
