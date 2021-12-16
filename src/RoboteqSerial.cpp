@@ -127,7 +127,7 @@ int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
  * @params: uint8_t channel: Motor channel
  * @return: Speed in RPM
  */
-int16_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
+int32_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readBlMotorSpeedInRpmQuery, channel, RoboteqCommands::readBlMotorSpeedInRpmRespond);
 }
