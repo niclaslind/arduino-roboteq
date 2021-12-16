@@ -303,7 +303,7 @@ int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
  * @params: uint8_t channel: Motor channel
  * @return: Feedback values
  */
-int16_t RoboteqSerial::readFeedback(uint8_t channel)
+int32_t RoboteqSerial::readFeedback(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readFeedbackQuery, channel, RoboteqCommands::readFeedbackRespond);
 }
@@ -335,7 +335,7 @@ int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
  *          f7= MOSFET failure 
  *          f8= Default configuration loaded at startup
  */
-int16_t RoboteqSerial::readFaultFlags()
+uint16_t RoboteqSerial::readFaultFlags()
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readFaulFlagQuery, RoboteqCommands::readFaultFlagRespond);
 }
@@ -364,7 +364,7 @@ String RoboteqSerial::readFirmwareID()
  *      f6 = Reverse Limit triggered
  *      f7 = Amps Trigger activated
  */
-int16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
+uint16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readRuntimeStatusFlagQuery, channel, RoboteqCommands::readRuntimeStatusFlagRespond);
 }
@@ -385,7 +385,7 @@ int16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
  *          f8 = MicroBasic script running
  *          f9 = Motor/Sensor Tuning mode
  */
-uint8_t RoboteqSerial::readStatusFlag()
+uint16_t RoboteqSerial::readStatusFlag()
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readStatusFlagQuery, RoboteqCommands::readStatusFlagRespond);
 }
@@ -455,7 +455,7 @@ uint8_t RoboteqSerial::readLockStatus()
  * @params: uint8_t channel: Motor channel
  * @return: Command value used for each motor. 0 to +/-1000 range
  */
-uint8_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
+int32_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readMotorCommandAppliedQuery, channel, RoboteqCommands::readMotorCommandAppliedRespond);
 }
@@ -513,7 +513,7 @@ uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValu
  *          f4: Right marker present
  *          f9: Sensor active
  */
-int16_t RoboteqSerial::readMagsensorStatus()
+uint16_t RoboteqSerial::readMagsensorStatus()
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorStatusQuery, RoboteqCommands::readMagsensorStatusRespond);
 }
@@ -587,7 +587,7 @@ int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel)
  * @params: uint8_t channel: Motor channel
  * @return: Speed in RPM
  */
-int16_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
+int32_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
 {
     return this->handleQueryRequestToInt(RoboteqCommands::readEncoderMotorSpeedInRpmQuery, channel, RoboteqCommands::readEncoderMotorSpeedInRpmRespond);
 }
@@ -1163,7 +1163,7 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *r
  * @params: uint8_t channel: Motor channel
  * @return: 
  */
-int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage)
+int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage)
 {
     String query = queryMessage;
     query += "_";
@@ -1177,7 +1177,7 @@ int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char 
  * @params: uint8_t channel: Motor channel
  * @return: 
  */
-int RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
+int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
 {
     String query = queryMessage;
     query += " ";
