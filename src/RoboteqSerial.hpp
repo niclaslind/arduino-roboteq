@@ -13,61 +13,61 @@ public:
 
     // Runtime-Queries
 public:
-    int16_t readMotorAmps();
-    int16_t readMotorAmps(uint8_t channel);
-    int16_t readAnalogInputAfterConversion(uint8_t channel);
-    uint16_t readRotorAngle(uint8_t channel);
-    uint16_t readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value);
-    bool readUserBooleanValue(uint8_t booleanVariable);
-    int16_t readBatteryAmps(uint8_t channel);
-    int32_t readBrushlessCountRelative(uint8_t channel);
-    int32_t readBLMotorSpeedInRpm(uint8_t channel);
-    int32_t readEncoderCounterAbsolut(uint8_t channel);
-    uint16_t readRawCanFrame();
-    int32_t readAbsoluteBrushlessCounter(uint8_t channel);
-    uint8_t readRawCanReceivedFramesCount();
-    int32_t readConvertedAnalogCommand(uint8_t channel);
-    int32_t readInternalPulseCommand(uint8_t channel);
-    int32_t readInternalSerialCommand(uint8_t channel);
-    uint32_t readRoboCanAliveNodesMap(uint8_t node);
-    int32_t readEncoderCountRelative(uint8_t channel);
-    uint32_t readDigitalInputs();
-    uint8_t readIndividualDigitalInputs(uint8_t digitalInputNumber);
-    uint16_t readDigitalOutputStatus();
-    uint8_t readDestinationReached(uint8_t channel);
-    int32_t readClosedLoopError(uint8_t channel);
-    int32_t readFeedback(uint8_t channel);
-    int16_t readFocAngleAdjust(uint8_t channel);
-    String readFirmwareID();
-    uint16_t readFaultFlags();
-    uint16_t readRuntimeStatusFlag(uint8_t channel);
-    uint16_t readStatusFlag();
-    uint8_t readHallSensorStates(uint8_t channel);
-    uint8_t isRoboCanNodeAlive(uint8_t nodeID);
-    uint16_t readSpektrumReceiver(uint8_t radioChannel);
-    uint8_t readLockStatus();
-    int32_t readMotorCommandApplied(uint8_t channel);
-    int16_t readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value);
-    uint8_t readMagsensorTrackDetect(uint8_t channel);
-    uint8_t readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value);
-    uint16_t readMagsensorStatus();
-    int16_t readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value);
-    int16_t readMagsensorGyroscope(uint8_t channel);
-    int16_t readMotorPowerOutputApplied(uint8_t channel);
-    uint16_t readPulseInput(uint8_t channel);
-    int16_t readPulseInputAfterConversion(uint8_t channel);
-    int32_t readEncoderMotorSpeedInRpm(uint8_t channel);
-    uint32_t readScriptChecksum();
-    int16_t readEncoderSpeedRelative(uint8_t channel);
-    int8_t readTemperature(RoboteqApi::ReadTemperatureValue value);
-    uint32_t readTime(RoboteqApi::ReadTimeValue &value);
-    int32_t readPositionRelativeTracking(uint8_t channel);
-    String readControlUnitTypeAndControllerModel();
-    uint32_t readMcuID(RoboteqApi::ReadMcuIdValue value);
-    uint16_t readVolts(RoboteqApi::ReadVoltsValue value);
-    String readVolts();
-    int32_t readUserIntegerVariable(uint8_t variableNumber);
-    int16_t readSlipFrequency(uint8_t channel);
+    int16_t readMotorAmps(bool *serialTimedOut=NULL);
+    int16_t readMotorAmps(uint8_t channel, bool *serialTimedOut=NULL);
+    int16_t readAnalogInputAfterConversion(uint8_t channel, bool *serialTimedOut=NULL);
+    uint16_t readRotorAngle(uint8_t channel, bool *serialTimedOut=NULL);
+    uint16_t readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value, bool *serialTimedOut=NULL);
+    bool readUserBooleanValue(uint8_t booleanVariable, bool *serialTimedOut=NULL);
+    int16_t readBatteryAmps(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readBrushlessCountRelative(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readBLMotorSpeedInRpm(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readEncoderCounterAbsolut(uint8_t channel, bool *serialTimedOut=NULL);
+    uint16_t readRawCanFrame(bool *serialTimedOut=NULL);
+    int32_t readAbsoluteBrushlessCounter(uint8_t channel, bool *serialTimedOut=NULL);
+    uint8_t readRawCanReceivedFramesCount(bool *serialTimedOut=NULL);
+    int32_t readConvertedAnalogCommand(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readInternalPulseCommand(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readInternalSerialCommand(uint8_t channel, bool *serialTimedOut=NULL);
+    uint32_t readRoboCanAliveNodesMap(uint8_t node, bool *serialTimedOut=NULL);
+    int32_t readEncoderCountRelative(uint8_t channel, bool *serialTimedOut=NULL);
+    uint32_t readDigitalInputs(bool *serialTimedOut=NULL);
+    uint8_t readIndividualDigitalInputs(uint8_t digitalInputNumber, bool *serialTimedOut=NULL);
+    uint16_t readDigitalOutputStatus(bool *serialTimedOut=NULL);
+    uint8_t readDestinationReached(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readClosedLoopError(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readFeedback(uint8_t channel, bool *serialTimedOut=NULL);
+    int16_t readFocAngleAdjust(uint8_t channel, bool *serialTimedOut=NULL);
+    String readFirmwareID(bool *serialTimedOut=NULL);
+    uint16_t readFaultFlags(bool *serialTimedOut=NULL);
+    uint16_t readRuntimeStatusFlag(uint8_t channel, bool *serialTimedOut=NULL);
+    uint16_t readStatusFlag(bool *serialTimedOut=NULL);
+    uint8_t readHallSensorStates(uint8_t channel, bool *serialTimedOut=NULL);
+    uint8_t isRoboCanNodeAlive(uint8_t nodeID, bool *serialTimedOut=NULL);
+    uint16_t readSpektrumReceiver(uint8_t radioChannel, bool *serialTimedOut=NULL);
+    uint8_t readLockStatus(bool *serialTimedOut=NULL);
+    int32_t readMotorCommandApplied(uint8_t channel, bool *serialTimedOut=NULL);
+    int16_t readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value, bool *serialTimedOut=NULL);
+    uint8_t readMagsensorTrackDetect(uint8_t channel, bool *serialTimedOut=NULL);
+    uint8_t readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value, bool *serialTimedOut=NULL);
+    uint16_t readMagsensorStatus(bool *serialTimedOut=NULL);
+    int16_t readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value, bool *serialTimedOut=NULL);
+    int16_t readMagsensorGyroscope(uint8_t channel, bool *serialTimedOut=NULL);
+    int16_t readMotorPowerOutputApplied(uint8_t channel, bool *serialTimedOut=NULL);
+    uint16_t readPulseInput(uint8_t channel, bool *serialTimedOut=NULL);
+    int16_t readPulseInputAfterConversion(uint8_t channel, bool *serialTimedOut=NULL);
+    int32_t readEncoderMotorSpeedInRpm(uint8_t channel, bool *serialTimedOut=NULL);
+    uint32_t readScriptChecksum(bool *serialTimedOut=NULL);
+    int16_t readEncoderSpeedRelative(uint8_t channel, bool *serialTimedOut=NULL);
+    int8_t readTemperature(RoboteqApi::ReadTemperatureValue value, bool *serialTimedOut=NULL);
+    uint32_t readTime(RoboteqApi::ReadTimeValue &value, bool *serialTimedOut=NULL);
+    int32_t readPositionRelativeTracking(uint8_t channel, bool *serialTimedOut=NULL);
+    String readControlUnitTypeAndControllerModel(bool *serialTimedOut=NULL);
+    uint32_t readMcuID(RoboteqApi::ReadMcuIdValue value, bool *serialTimedOut=NULL);
+    uint16_t readVolts(RoboteqApi::ReadVoltsValue value, bool *serialTimedOut=NULL);
+    String readVolts(bool *serialTimedOut=NULL);
+    int32_t readUserIntegerVariable(uint8_t variableNumber, bool *serialTimedOut=NULL);
+    int16_t readSlipFrequency(uint8_t channel, bool *serialTimedOut=NULL);
 
     // Motor commands
 public:
@@ -107,13 +107,13 @@ private:
 
 private:
     void sendQuery(const char *message);
-    String readQuery(const char *message);
+    String readQuery(const char *message, bool *serialTimedOut=NULL);
 
 private:
-    String handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage);
-    String handleQueryRequest(const char *queryMessage, const char *respondMessage);
-    int handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage);
-    int handleQueryRequestToInt(const char *queryMessage, const char *respondMessage);
+    String handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut=NULL);
+    String handleQueryRequest(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
+    int handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut=NULL);
+    int handleQueryRequestToInt(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
 
 private:
     Stream &_stream;

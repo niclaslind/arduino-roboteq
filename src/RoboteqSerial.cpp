@@ -22,11 +22,12 @@ RoboteqSerial::RoboteqSerial(Stream &stream)
  *      Some power board units measure the Mo-tor Amps and calculate the Battery Amps, while other models measure the Battery Amps and calculate the Motor Amps. 
  *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Amps *10 for each channel
  */
-int16_t RoboteqSerial::readMotorAmps()
+int16_t RoboteqSerial::readMotorAmps(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMotorAmpsQuery, RoboteqCommands::readMotorAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorAmpsQuery, RoboteqCommands::readMotorAmpsRespond, serialTimedOut);
 }
 
 /**
@@ -39,12 +40,12 @@ int16_t RoboteqSerial::readMotorAmps()
  *      The measured Amps is always more precise than the calculated Amps. See controller datasheet to find which Amps is measured by your particular model.
  * 
  * @params: uint8_t channel: Motor channel
- * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Amps *10 for current channel
  */
-int16_t RoboteqSerial::readMotorAmps(uint8_t channel)
+int16_t RoboteqSerial::readMotorAmps(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMotorAmpsQuery, channel, RoboteqCommands::readMotorAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorAmpsQuery, channel, RoboteqCommands::readMotorAmpsRespond, serialTimedOut);
 }
 
 /**
@@ -52,11 +53,12 @@ int16_t RoboteqSerial::readMotorAmps(uint8_t channel)
  *              If an input is disabled, the query returns 0. The total number of Analog input channels varies from one controller model to another and can be found in the product datasheet.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Converted analog input value +/-1000 range
  */
-int16_t RoboteqSerial::readAnalogInputAfterConversion(uint8_t channel)
+int16_t RoboteqSerial::readAnalogInputAfterConversion(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readAnalogInputQuery, channel, RoboteqCommands::readAnalogInputRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readAnalogInputQuery, channel, RoboteqCommands::readAnalogInputRespond, serialTimedOut);
 }
 
 /**
@@ -64,11 +66,12 @@ int16_t RoboteqSerial::readAnalogInputAfterConversion(uint8_t channel)
  *                 This query is useful for verifying trou-bleshooting sin/cos and SPI/SSI sensors. Angle are reported in 0-511 degrees
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Rotor electrical angle
  */
-uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
+uint16_t RoboteqSerial::readRotorAngle(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRotorAngleQuery, channel, RoboteqCommands::readRotorAngleRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRotorAngleQuery, channel, RoboteqCommands::readRotorAngleRespond, serialTimedOut);
 }
 
 /**
@@ -76,11 +79,12 @@ uint16_t RoboteqSerial::readRotorAngle(uint8_t channel)
  *              This query is useful for verifying troubleshooting sin/cos sensors and SSI sensors.
  * 
  * @params: ReadRawSinCosSensorValue value: Which input you want to read
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: ADC value
  */
-uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value)
+uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, uint8_t(value), RoboteqCommands::readRotorAngleRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRawSinConSensorQuery, uint8_t(value), RoboteqCommands::readRotorAngleRespond, serialTimedOut);
 }
 
 /**
@@ -89,11 +93,12 @@ uint16_t RoboteqSerial::readRawSinCosSensor(RoboteqApi::ReadRawSinCosSensorValue
  *              The total number of user boolean variables varies from one controller model to another and can be found in the product datasheet
  * 
  * @params: uint8_t booleanVariable: Boolean variable number
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 0 or 1 state of the variable
  */
-bool RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable)
+bool RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable, bool *serialTimedOut)
 {
-    return (bool)this->handleQueryRequestToInt(RoboteqCommands::readUserBooleanValueQuery, booleanVariable, RoboteqCommands::readUserBooleanValueRespond);
+    return (bool)this->handleQueryRequestToInt(RoboteqCommands::readUserBooleanValueQuery, booleanVariable, RoboteqCommands::readUserBooleanValueRespond, serialTimedOut);
 }
 
 /**
@@ -101,11 +106,12 @@ bool RoboteqSerial::readUserBooleanValue(uint8_t booleanVariable)
  *               Battery Amps are often lower than motor Amps
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Amps *10 for each channel
  */
-int16_t RoboteqSerial::readBatteryAmps(uint8_t channel)
+int16_t RoboteqSerial::readBatteryAmps(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readBatteryAmpsQuery, channel, RoboteqCommands::readBatteryAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readBatteryAmpsQuery, channel, RoboteqCommands::readBatteryAmpsRespond, serialTimedOut);
 }
 
 /**
@@ -113,11 +119,12 @@ int16_t RoboteqSerial::readBatteryAmps(uint8_t channel)
  *              Relative counter read is sometimes easier to work with, compared to full counter reading, as smaller numbers are usually returned.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Value
  */
-int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
+int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readBatteryAmpsQuery, channel, RoboteqCommands::readBatteryAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readBatteryAmpsQuery, channel, RoboteqCommands::readBatteryAmpsRespond, serialTimedOut);
 }
 
 /**
@@ -125,11 +132,12 @@ int32_t RoboteqSerial::readBrushlessCountRelative(uint8_t channel)
  *              To report RPM accurately, the correct number of motor poles must be loaded in the BLPOL configuration parameter
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Speed in RPM
  */
-int32_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
+int32_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readBlMotorSpeedInRpmQuery, channel, RoboteqCommands::readBlMotorSpeedInRpmRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readBlMotorSpeedInRpmQuery, channel, RoboteqCommands::readBlMotorSpeedInRpmRespond, serialTimedOut);
 }
 
 /**
@@ -137,11 +145,12 @@ int32_t RoboteqSerial::readBLMotorSpeedInRpm(uint8_t channel)
  *              The counter is 32-bit with a range of +/- 2147483648 counts.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Absolute counter value
  */
-int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel)
+int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderCounterAbsolutQuery, channel, RoboteqCommands::readEncoderCounterAbsolutRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderCounterAbsolutQuery, channel, RoboteqCommands::readEncoderCounterAbsolutRespond, serialTimedOut);
 }
 
 /**
@@ -149,11 +158,12 @@ int32_t RoboteqSerial::readEncoderCounterAbsolut(uint8_t channel)
  *              The counter is 32-bit with a range of +/- 2147483648 counts.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Absolute counter value
  */
-int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel)
+int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readAbsolutBrushlessCounterQuery, channel, RoboteqCommands::readAbsolutBrushlessCounterRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readAbsolutBrushlessCounterQuery, channel, RoboteqCommands::readAbsolutBrushlessCounterRespond, serialTimedOut);
 }
 
 /**
@@ -162,11 +172,12 @@ int32_t RoboteqSerial::readAbsoluteBrushlessCounter(uint8_t channel)
  *              When the query is sent without arguments, the controller replies by outputting all elements of the frame separated by colons
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Number of frames in receive queue
  */
-uint8_t RoboteqSerial::readRawCanReceivedFramesCount()
+uint8_t RoboteqSerial::readRawCanReceivedFramesCount(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRawCanRecivedFramesCountQuery, RoboteqCommands::readRawCanRecivedFramesCountRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRawCanRecivedFramesCountQuery, RoboteqCommands::readRawCanRecivedFramesCountRespond, serialTimedOut);
 }
 
 /**
@@ -176,11 +187,12 @@ uint8_t RoboteqSerial::readRawCanReceivedFramesCount()
  *              The returned value is the raw Analog input value with all the adjustments performed to convert it to a command (Min/Max/Center/Deadband/Linearity).
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Command value in +/-1000 range
  */
-int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel)
+int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readConvertedAnalogCommandQuery, channel, RoboteqCommands::readConvertedAnalogCommandRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readConvertedAnalogCommandQuery, channel, RoboteqCommands::readConvertedAnalogCommandRespond, serialTimedOut);
 }
 
 /**
@@ -190,11 +202,12 @@ int32_t RoboteqSerial::readConvertedAnalogCommand(uint8_t channel)
  *              The returned value is the raw Pulse input value with all the adjust-ments performed to convert it to a command (Min/Max/Center/Deadband/Linearity)
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Command value in +/-1000 range 
  */
-int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel)
+int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readInternalPulseCommandQuery, channel, RoboteqCommands::readInternalPulseCommandRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readInternalPulseCommandQuery, channel, RoboteqCommands::readInternalPulseCommandRespond, serialTimedOut);
 }
 
 /**
@@ -203,11 +216,12 @@ int32_t RoboteqSerial::readInternalPulseCommand(uint8_t channel)
  *              even though the controller may be currently respond-ing to a Pulse or Analog command because of a higher priority setting.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Command value in +/-1000 range 
  */
-int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel)
+int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readInternalSerialCommandQuery, channel, RoboteqCommands::readInternalSerialCommandRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readInternalSerialCommandQuery, channel, RoboteqCommands::readInternalSerialCommandRespond, serialTimedOut);
 }
 
 /**
@@ -216,11 +230,12 @@ int32_t RoboteqSerial::readInternalSerialCommand(uint8_t channel)
  *              The 4-bits contain the node information. E.g. bits 0-3 of first number is for node 0, bits 8-11 of first number is for node 2, bits 4-7 of second number is for node 5 and bits 12-15 of fourth number is for node 11, etc.
  * 
  * @params: uint8_t nodes: 1= Nodes 0-3 ... 16= Nodes 124-127
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 4 words of 4 bits.
  */
-uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t nodes)
+uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t nodes, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRoboCanAliveNodesMapQuery, nodes, RoboteqCommands::readRoboCanAliveNodesMapRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRoboCanAliveNodesMapQuery, nodes, RoboteqCommands::readRoboCanAliveNodesMapRespond, serialTimedOut);
 }
 
 /**
@@ -228,11 +243,12 @@ uint32_t RoboteqSerial::readRoboCanAliveNodesMap(uint8_t nodes)
  *              Relative counter read is sometimes easier to work with, compared to full counter reading, as smaller numbers are usually returned.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Counts since last read using ?CR
  */
-int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel)
+int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderCountRelativeQuery, channel, RoboteqCommands::readEncoderCountRelativeRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderCountRelativeQuery, channel, RoboteqCommands::readEncoderCountRelativeRespond, serialTimedOut);
 }
 
 /**
@@ -240,11 +256,12 @@ int32_t RoboteqSerial::readEncoderCountRelative(uint8_t channel)
  *              The total number of Digital input channels varies from one controller model to anoth-er and can be found in the product datasheet
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: b1 + b2*2 + b3*4 + ... +bn*2^n-1
  */
-uint32_t RoboteqSerial::readDigitalInputs()
+uint32_t RoboteqSerial::readDigitalInputs(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readDigitalInputsQuery, RoboteqCommands::readDigitalInputsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readDigitalInputsQuery, RoboteqCommands::readDigitalInputsRespond, serialTimedOut);
 }
 
 /**
@@ -252,11 +269,12 @@ uint32_t RoboteqSerial::readDigitalInputs()
  *              The total number of Digital input channels varies from one controller model to anoth-er and can be found in the product datasheet.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 0 or 1 state for each input
  */
-uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber)
+uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readIndividualDigitalInputsQuery, digitalInputNumber, RoboteqCommands::readIndividualDigitalInputsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readIndividualDigitalInputsQuery, digitalInputNumber, RoboteqCommands::readIndividualDigitalInputsRespond, serialTimedOut);
 }
 
 /**
@@ -264,11 +282,12 @@ uint8_t RoboteqSerial::readIndividualDigitalInputs(uint8_t digitalInputNumber)
  *               When querying an individual output, the reply is 0 or 1 depending on its status. The total number of Digital output channels varies from one controller model to another and can be found in the product datasheet.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: d1 + d2*2 + d3*4 + ... + dn * 2^n-1
  */
-uint16_t RoboteqSerial::readDigitalOutputStatus()
+uint16_t RoboteqSerial::readDigitalOutputStatus(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readDigitalOutputStatusQuery, RoboteqCommands::readDigitalOutputStatusRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readDigitalOutputStatusQuery, RoboteqCommands::readDigitalOutputStatusRespond, serialTimedOut);
 }
 
 /**
@@ -276,11 +295,12 @@ uint16_t RoboteqSerial::readDigitalOutputStatus()
  *              The Destination Reached bit is latched and is cleared once it has been read.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 0: Not yet reached, 1: Reached
  */
-uint8_t RoboteqSerial::readDestinationReached(uint8_t channel)
+uint8_t RoboteqSerial::readDestinationReached(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readDestinationReachedQuery, channel, RoboteqCommands::readDestinationReachedRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readDestinationReachedQuery, channel, RoboteqCommands::readDestinationReachedRespond, serialTimedOut);
 }
 
 /**
@@ -288,11 +308,12 @@ uint8_t RoboteqSerial::readDestinationReached(uint8_t channel)
  *              This query can be used to detect when the motor has reached the desired speed or position. In open loop mode, this query returns 0
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Error value
  */
-int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
+int32_t RoboteqSerial::readClosedLoopError(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readClosedLoopErrorQuery, channel, RoboteqCommands::readClosedLoopErrorRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readClosedLoopErrorQuery, channel, RoboteqCommands::readClosedLoopErrorRespond, serialTimedOut);
 }
 
 /**
@@ -301,22 +322,24 @@ int32_t RoboteqSerial::readClosedLoopError(uint8_t channel)
  *               This query is useful for verifying that the correct feedback source is used by the channel in the closed-loop mode and that its value is in range with expectations
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Feedback values
  */
-int32_t RoboteqSerial::readFeedback(uint8_t channel)
+int32_t RoboteqSerial::readFeedback(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readFeedbackQuery, channel, RoboteqCommands::readFeedbackRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readFeedbackQuery, channel, RoboteqCommands::readFeedbackRespond, serialTimedOut);
 }
 
 /**
  * @description: Read in real time the angle correction that is currently applied by the Field Oriented algo-rithm in order achieve optimal performance
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Angle correction
  */
-int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
+int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readFocAngleAdjustQuery, channel, RoboteqCommands::readFocAngleAdjustRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readFocAngleAdjustQuery, channel, RoboteqCommands::readFocAngleAdjustRespond, serialTimedOut);
 }
 
 
@@ -325,6 +348,7 @@ int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
  * @description: Reports the status of the controller fault conditions that can occur during operation.
  *              The response to that query is a single number which must be converted into binary in order to evaluate each of the individual status bits that compose it.
  * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: f1 + f2*2 + f3*4 + ... + fn*2^n-1
  *          f1= Overheat 
  *          f2= Overvoltage 
@@ -335,19 +359,20 @@ int16_t RoboteqSerial::readFocAngleAdjust(uint8_t channel)
  *          f7= MOSFET failure 
  *          f8= Default configuration loaded at startup
  */
-uint16_t RoboteqSerial::readFaultFlags()
+uint16_t RoboteqSerial::readFaultFlags(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readFaulFlagQuery, RoboteqCommands::readFaultFlagRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readFaulFlagQuery, RoboteqCommands::readFaultFlagRespond, serialTimedOut);
 }
 
 /**
  * @description: This query will report a string with the date and identification of the firmware revision of the controller.
  * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Firmware ID string
  */
-String RoboteqSerial::readFirmwareID()
+String RoboteqSerial::readFirmwareID(bool *serialTimedOut)
 {
-    return this->handleQueryRequest(RoboteqCommands::readFirmwareIDQuery, RoboteqCommands::readFirmwareIDRespond);
+    return this->handleQueryRequest(RoboteqCommands::readFirmwareIDQuery, RoboteqCommands::readFirmwareIDRespond, serialTimedOut);
 }
 
 // TODO: Make an overload of this function and make the user choose which fault flag we should look for
@@ -355,6 +380,7 @@ String RoboteqSerial::readFirmwareID()
  * @description: Report the runtime status of each motor. The response to that query is a single number which must be converted into binary in order to evaluate each of the individual status bits that compose it.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return:  f1 + f2*2 + f3*4 + ... + fn*2^n-1
  *      f1 = Amps Limit currently active
  *      f2 = Motor stalled
@@ -364,9 +390,9 @@ String RoboteqSerial::readFirmwareID()
  *      f6 = Reverse Limit triggered
  *      f7 = Amps Trigger activated
  */
-uint16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
+uint16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readRuntimeStatusFlagQuery, channel, RoboteqCommands::readRuntimeStatusFlagRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readRuntimeStatusFlagQuery, channel, RoboteqCommands::readRuntimeStatusFlagRespond, serialTimedOut);
 }
 
 // TODO: Make an overload of this function and make the user choose which fault flag we should look for
@@ -374,6 +400,7 @@ uint16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
  *  @description: Report the state of status flags used by the controller to indicate a number of internal conditions during normal operation. 
  *              The response to this query is the single number for all status flags. The status of individual flags is read by converting this number to binary and look at various bits of that number
  * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return:  f1 + f2*2 + f3*4 + ... + fn*2^n-1
  *          f1 = Serial mode
  *          f2 = Pulse mode 
@@ -385,9 +412,9 @@ uint16_t RoboteqSerial::readRuntimeStatusFlag(uint8_t channel)
  *          f8 = MicroBasic script running
  *          f9 = Motor/Sensor Tuning mode
  */
-uint16_t RoboteqSerial::readStatusFlag()
+uint16_t RoboteqSerial::readStatusFlag(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readStatusFlagQuery, RoboteqCommands::readStatusFlagRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readStatusFlagQuery, RoboteqCommands::readStatusFlagRespond, serialTimedOut);
 }
 
 // TODO: Make an overload of this function and make the user choose which fault flag we should look for
@@ -397,38 +424,41 @@ uint16_t RoboteqSerial::readStatusFlag()
  *              For 120 degrees spaced sensors, 1-2- 3-4- 5-6 are valid combinations, while 0 and 7 are invalid combinations. In normal conditions, valid values should appear at one time or the other as the motor shaft is rotated
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: HS= ha + 2*hb + 4*hc
  *         ha = hall sensor A
  *         hb = hall sensor B
  *         hc = hall sensor C
  */
-uint8_t RoboteqSerial::readHallSensorStates(uint8_t channel)
+uint8_t RoboteqSerial::readHallSensorStates(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readHallSensorStatesQuery, channel, RoboteqCommands::readHallSensorStatesRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readHallSensorStatesQuery, channel, RoboteqCommands::readHallSensorStatesRespond, serialTimedOut);
 }
 
 /**
  * @description: This query is used to determine if specific RoboCAN node is alive on CAN bus.
  * 
  * @params: uint8_t nodeID: Node ID
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 
  *          0 : Not present
  *          1 : Alive
  */
-uint8_t RoboteqSerial::isRoboCanNodeAlive(uint8_t nodeID)
+uint8_t RoboteqSerial::isRoboCanNodeAlive(uint8_t nodeID, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::isRoboCanNodeAliveQuery, nodeID, RoboteqCommands::isRoboCanNodeAliveRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::isRoboCanNodeAliveQuery, nodeID, RoboteqCommands::isRoboCanNodeAliveRespond, serialTimedOut);
 }
 
 /**
  * @description: On controller models with Spektrum radio support, this query is used to read the raw values of each of up to 6 receive channels. When signal is received, this query returns the value 0.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Raw joystick value, or 0 if transmitter is off or out of range
  */
-uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
+uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readSpektrumReceiverQuery, radioChannel, RoboteqCommands::readSpektrumReceiverRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readSpektrumReceiverQuery, radioChannel, RoboteqCommands::readSpektrumReceiverRespond, serialTimedOut);
 }
 
 /**
@@ -436,13 +466,14 @@ uint16_t RoboteqSerial::readSpektrumReceiver(uint8_t radioChannel)
  *             This feature is useful to protect the controller configuration from being copied by unauthorized people.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 
  *      0: unlocked 
  *      1: locked
  */
-uint8_t RoboteqSerial::readLockStatus()
+uint8_t RoboteqSerial::readLockStatus(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readLockStatusQuery, RoboteqCommands::readLockStatusRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readLockStatusQuery, RoboteqCommands::readLockStatusRespond, serialTimedOut);
 }
 
 /**
@@ -453,11 +484,12 @@ uint8_t RoboteqSerial::readLockStatus()
  *              This query is useful for viewing which command is actually being used and the effect of the correction that is being applied to the raw input.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Command value used for each motor. 0 to +/-1000 range
  */
-int32_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
+int32_t RoboteqSerial::readMotorCommandApplied(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMotorCommandAppliedQuery, channel, RoboteqCommands::readMotorCommandAppliedRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorCommandAppliedQuery, channel, RoboteqCommands::readMotorCommandAppliedRespond, serialTimedOut);
 }
 
 /**
@@ -465,11 +497,12 @@ int32_t RoboteqSerial::readMotorCommandApplied(uint8_t channel)
  *              Current is reported in Amps x 10.
  * 
  * @params: uint8_t ReadFieldOrientedControlMotorAmpsValue: value
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Amps * 10
  */
-int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value)
+int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOrientedControlMotorAmpsValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, uint8_t(value), RoboteqCommands::readFieldOrientedControlMotorAmpsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readFieldOrientedControlMotorAmpsQuery, uint8_t(value), RoboteqCommands::readFieldOrientedControlMotorAmpsRespond, serialTimedOut);
 }
 
 /**
@@ -478,13 +511,14 @@ int16_t RoboteqSerial::readFieldOrientedControlMotorAmps(RoboteqApi::ReadFieldOr
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 
  *         0: No track detected
  *         1: Track detected
  */
-uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
+uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackDetectQuery, channel, RoboteqCommands::readMagsensorTrackDetectRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackDetectQuery, channel, RoboteqCommands::readMagsensorTrackDetectRespond, serialTimedOut);
 }
 
 /**
@@ -493,11 +527,12 @@ uint8_t RoboteqSerial::readMagsensorTrackDetect(uint8_t channel)
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 0: No marker detected, 1: Marker detected
  */
-uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value)
+uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, uint8_t(value), RoboteqCommands::readMagsensorMarkersRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorMarkersQuery, uint8_t(value), RoboteqCommands::readMagsensorMarkersRespond, serialTimedOut);
 }
 
 /**
@@ -506,6 +541,7 @@ uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValu
  *              If more than one sensor is connected to pulse inputs and these inputs are enabled and configured in Magsensor MultiPWM mode, then the argument following the query is used to select the sensor
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 1 + f2*2 + f3*4 + ... + fn*2n-1
  *          f1: Tape cross
  *          f2: Tape detect
@@ -513,20 +549,21 @@ uint8_t RoboteqSerial::readMagsensorMarkers(RoboteqApi::ReadMagsensorMarkersValu
  *          f4: Right marker present
  *          f9: Sensor active
  */
-uint16_t RoboteqSerial::readMagsensorStatus()
+uint16_t RoboteqSerial::readMagsensorStatus(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorStatusQuery, RoboteqCommands::readMagsensorStatusRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorStatusQuery, RoboteqCommands::readMagsensorStatusRespond, serialTimedOut);
 }
 
 /**
  * @description:
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Position in millimeters
  */
-int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value)
+int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrackPositionValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, uint8_t(value), RoboteqCommands::readMagsensorTrackPositionRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorTrackPositionQuery, uint8_t(value), RoboteqCommands::readMagsensorTrackPositionRespond, serialTimedOut);
 }
 
 /**
@@ -536,11 +573,12 @@ int16_t RoboteqSerial::readMagsensorTrackPosition(RoboteqApi::ReadMagsensorTrack
  *              The reported position of the magnetic track in millimeters, us-ing the center of the sensor as the 0 reference
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Gyroscope value
  */
-int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel)
+int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorGyroscopeQuery, channel, RoboteqCommands::readMagsensorGyroscopeRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMagsensorGyroscopeQuery, channel, RoboteqCommands::readMagsensorGyroscopeRespond, serialTimedOut);
 }
 
 /**
@@ -549,11 +587,12 @@ int16_t RoboteqSerial::readMagsensorGyroscope(uint8_t channel)
  *              A value of 1000 equals 100% PWM. The equivalent voltage at the motor wire is the battery voltage * PWM level.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: 0 to +/-1000 power level
  */
-int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel)
+int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMotorPowerOutputAppliedQuery, channel, RoboteqCommands::readMotorPowerOutputAppliedRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMotorPowerOutputAppliedQuery, channel, RoboteqCommands::readMotorPowerOutputAppliedRespond, serialTimedOut);
 }
 
 /**
@@ -562,11 +601,12 @@ int16_t RoboteqSerial::readMotorPowerOutputApplied(uint8_t channel)
  *              In Pulse Count mode, the reported value in the number of pulses as detected. This counter only increments. In order to reset that counter the pulse capture mode needs to be set back to disabled and then again to Pulse Count.
  * 
  * @params: uint8_t channel: Pulse capture input number
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Value of pulse input
  */
-uint16_t RoboteqSerial::readPulseInput(uint8_t channel)
+uint16_t RoboteqSerial::readPulseInput(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readPulseInputQuery, channel, RoboteqCommands::readPulseInputRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readPulseInputQuery, channel, RoboteqCommands::readPulseInputRespond, serialTimedOut);
 }
 
 /**
@@ -574,33 +614,36 @@ uint16_t RoboteqSerial::readPulseInput(uint8_t channel)
  *              If an input is disabled, the query returns 0.
  * 
  * @params: uint8_t channel: Pulse input number
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Converted input value to +/-1000 range
  */
-int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel)
+int16_t RoboteqSerial::readPulseInputAfterConversion(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readPulseInputAfterConversionQuery, channel, RoboteqCommands::readPulseInputAfterConversionRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readPulseInputAfterConversionQuery, channel, RoboteqCommands::readPulseInputAfterConversionRespond, serialTimedOut);
 }
 
 /**
  * @description: Reports the actual speed measured by the encoders as the actual RPM value. To report RPM accurately, the correct Pulses per Revolution (PPR) must be stored in the encoder configuration
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Speed in RPM
  */
-int32_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel)
+int32_t RoboteqSerial::readEncoderMotorSpeedInRpm(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderMotorSpeedInRpmQuery, channel, RoboteqCommands::readEncoderMotorSpeedInRpmRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderMotorSpeedInRpmQuery, channel, RoboteqCommands::readEncoderMotorSpeedInRpmRespond, serialTimedOut);
 }
 
 /**
  * @description: Scans the script storage memory and computes a checksum number that is unique to each script. If not script is loaded the query outputs the value 0xFFFFFFFF. 
  *              Since a stored script cannot be read out, this query is useful for determining if the correct version of a given script is loaded.
  * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Checksum number
  */
-uint32_t RoboteqSerial::readScriptChecksum()
+uint32_t RoboteqSerial::readScriptChecksum(bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readScriptChecksumQuery, RoboteqCommands::readScriptChecksumRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readScriptChecksumQuery, RoboteqCommands::readScriptChecksumRespond, serialTimedOut);
 }
 
 /**
@@ -610,11 +653,12 @@ uint32_t RoboteqSerial::readScriptChecksum()
  *              Note that if the motor spins faster than the Max RPM, the returned value will exceed 1000. However, a larger value is ignored by the controller for its internal operation.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Speed relative to max
  */
-int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
+int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderSpeedRelativeQuery, channel, RoboteqCommands::readEncoderSpeedRelativeRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readEncoderSpeedRelativeQuery, channel, RoboteqCommands::readEncoderSpeedRelativeRespond, serialTimedOut);
 }
 
 /**
@@ -624,11 +668,12 @@ int16_t RoboteqSerial::readEncoderSpeedRelative(uint8_t channel)
  *      Other controller models only have one heatsink temperature sensor and therefore only report one value in addition to the Internal IC temperature.
  * 
  * @params: ReadTemperatureValue value: Temp element you want to read
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Temperature in degrees
  */
-int8_t RoboteqSerial::readTemperature(RoboteqApi::ReadTemperatureValue value)
+int8_t RoboteqSerial::readTemperature(RoboteqApi::ReadTemperatureValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, uint8_t(value), RoboteqCommands::readTemperatureRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readTemperatureQuery, uint8_t(value), RoboteqCommands::readTemperatureRespond, serialTimedOut);
 }
 
 /**
@@ -637,45 +682,49 @@ int8_t RoboteqSerial::readTemperature(RoboteqApi::ReadTemperatureValue value)
  *              On newer models, the time is kept in multiple registers for seconds, minutes, hours (24h format), dayofmonth, month, year in full
  * 
  * @params: ReadTimeValue value: Date element in new controller model
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Value
  */
 // TODO: check this fuction
-uint32_t RoboteqSerial::readTime(RoboteqApi::ReadTimeValue &value)
+uint32_t RoboteqSerial::readTime(RoboteqApi::ReadTimeValue &value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery, RoboteqCommands::readTimeRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readTimeQuery, RoboteqCommands::readTimeRespond, serialTimedOut);
 }
 
 /**
  * @description: Reads the real-time value of the expected motor position in the position tracking closed loop mode and in speed position
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Position
  */
-int32_t RoboteqSerial::readPositionRelativeTracking(uint8_t channel)
+int32_t RoboteqSerial::readPositionRelativeTracking(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readPositionRelativeTrackingQuery, channel, RoboteqCommands::readPositionRelativeTrackingRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readPositionRelativeTrackingQuery, channel, RoboteqCommands::readPositionRelativeTrackingRespond, serialTimedOut);
 }
 
 /**
  * @description: Reports two strings identifying the Control Unit type and the Controller Model type. This query is useful for adapting the user software application to the controller model that is attached to the computer.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Control Unit Id String:Controller Model Id String
  */
-String RoboteqSerial::readControlUnitTypeAndControllerModel()
+String RoboteqSerial::readControlUnitTypeAndControllerModel(bool *serialTimedOut)
 {
-    return this->handleQueryRequest(RoboteqCommands::readControlUnitTypeAndControllerModelQuery, RoboteqCommands::readControlUnitTypeAndControllerModelRespond);
+    return this->handleQueryRequest(RoboteqCommands::readControlUnitTypeAndControllerModelQuery, RoboteqCommands::readControlUnitTypeAndControllerModelRespond, serialTimedOut);
 }
 
 /**
  * @description: Reports MCU specific information. This query is useful for determining the type of MCU: 100 = STM32F10X, 300 = STM32F30X. The query also produces a unique Id number that is stored on the MCU silicon.
  * 
  * @params: ReadMcuIdValue &value: Data element you want to read
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Value 
  */
-uint32_t RoboteqSerial::readMcuID(RoboteqApi::ReadMcuIdValue value)
+uint32_t RoboteqSerial::readMcuID(RoboteqApi::ReadMcuIdValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, uint8_t(value), RoboteqCommands::readMcuIDRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readMcuIDQuery, uint8_t(value), RoboteqCommands::readMcuIDRespond, serialTimedOut);
 }
 
 /**
@@ -686,11 +735,12 @@ uint32_t RoboteqSerial::readMcuID(RoboteqApi::ReadMcuIdValue value)
  *              The battery voltage is monitored for detecting the undervoltage or overvoltage con-ditions.
  * 
  * @params: uint8_t channel: MotorChannel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: voltage value in millivolts
  */
-uint16_t RoboteqSerial::readVolts(RoboteqApi::ReadVoltsValue value)
+uint16_t RoboteqSerial::readVolts(RoboteqApi::ReadVoltsValue value, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, uint8_t(value), RoboteqCommands::readVoltsRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readVoltsQuery, uint8_t(value), RoboteqCommands::readVoltsRespond, serialTimedOut);
 }
 
 /**
@@ -700,11 +750,12 @@ uint16_t RoboteqSerial::readVolts(RoboteqApi::ReadVoltsValue value)
  *              The 5V output will typically show the controller’s internal regulated 5V minus the drop of a diode that is used for protection and will be in the 4.7V range. 
  *              The battery voltage is monitored for detecting the undervoltage or overvoltage con-ditions.
  * 
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Volts * 10 for internal and battery volts. Milivolts for 5V output
  */
-String RoboteqSerial::readVolts()
+String RoboteqSerial::readVolts(bool *serialTimedOut)
 {
-    return this->handleQueryRequest(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond);
+    return this->handleQueryRequest(RoboteqCommands::readVoltsQuery, RoboteqCommands::readVoltsRespond, serialTimedOut);
 }
 
 /**
@@ -713,11 +764,12 @@ String RoboteqSerial::readVolts()
  *              The total number of user integer variables varies from one controller model to another and can be found in the product datasheet
  * 
  * @params: uint8_t variableNumber: Variable number
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Value
  */
-int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber)
+int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readUserIntegerVariableQuery, variableNumber, RoboteqCommands::readUserIntegerVariableRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readUserIntegerVariableQuery, variableNumber, RoboteqCommands::readUserIntegerVariableRespond, serialTimedOut);
 }
 
 /**
@@ -725,11 +777,12 @@ int32_t RoboteqSerial::readUserIntegerVariable(uint8_t variableNumber)
  *              Read the value of the Slip Frequency be-tween the rotor and the stator of an AC Induction motor.
  * 
  * @params: uint8_t channel: Motor channel
+ * @params: bool *serialTimedOut: Optional flag that is set to TRUE in case the Serial timed out before a valid response has been received.
  * @return: Slip Frequency in Hertz * 10
  */
-int16_t RoboteqSerial::readSlipFrequency(uint8_t channel)
+int16_t RoboteqSerial::readSlipFrequency(uint8_t channel, bool *serialTimedOut)
 {
-    return this->handleQueryRequestToInt(RoboteqCommands::readSlipFrequencyQuery, channel, RoboteqCommands::readSlipFrequencyRespond);
+    return this->handleQueryRequestToInt(RoboteqCommands::readSlipFrequencyQuery, channel, RoboteqCommands::readSlipFrequencyRespond, serialTimedOut);
 }
 
 /**
@@ -1106,8 +1159,11 @@ void RoboteqSerial::sendQuery(const char *message)
  * @params: uint8_t channel: Motor channel
  * @return: 
  */
-String RoboteqSerial::readQuery(const char *message)
+String RoboteqSerial::readQuery(const char *message, bool *serialTimedOut)
 {
+    if(serialTimedOut!=NULL){
+        *serialTimedOut = false;
+    }
     String inputString;
     unsigned long startTime = millis();
     while (millis() - startTime < _timeout)
@@ -1122,6 +1178,9 @@ String RoboteqSerial::readQuery(const char *message)
             }
         }
     }
+    if(serialTimedOut!=NULL){
+        *serialTimedOut = true;
+    }
     return "-1";
 }
 
@@ -1131,7 +1190,7 @@ String RoboteqSerial::readQuery(const char *message)
  * @params: uint8_t channel: Motor channel
  * @return: 
  */
-String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
+String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut)
 {
     String query = queryMessage;
     query += " ";
@@ -1139,7 +1198,7 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extra
     query += "_";
 
     this->sendQuery(query.c_str());
-    return this->readQuery(respondMessage);
+    return this->readQuery(respondMessage, serialTimedOut);
 }
 
 /**
@@ -1149,12 +1208,12 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, uint8_t extra
  *          const char* respondMessage: Message you excpect to get back from Roboteq
  * @return: 
  */
-String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *respondMessage)
+String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *respondMessage, bool *serialTimedOut)
 {
     String query = queryMessage;
     query += "_";
     this->sendQuery(query.c_str());
-    return this->readQuery(respondMessage);
+    return this->readQuery(respondMessage, serialTimedOut);
 }
 
 /**
@@ -1163,12 +1222,12 @@ String RoboteqSerial::handleQueryRequest(const char *queryMessage, const char *r
  * @params: uint8_t channel: Motor channel
  * @return: 
  */
-int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage)
+int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const char *respondMessage, bool *serialTimedOut)
 {
     String query = queryMessage;
     query += "_";
     this->sendQuery(query.c_str());
-    return this->readQuery(respondMessage).toInt();
+    return this->readQuery(respondMessage, serialTimedOut).toInt();
 }
 
 /**
@@ -1177,7 +1236,7 @@ int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, const c
  * @params: uint8_t channel: Motor channel
  * @return: 
  */
-int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage)
+int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut)
 {
     String query = queryMessage;
     query += " ";
@@ -1185,5 +1244,5 @@ int32_t RoboteqSerial::handleQueryRequestToInt(const char *queryMessage, uint8_t
     query += "_";
 
     this->sendQuery(query.c_str());
-    return this->readQuery(respondMessage).toInt();
+    return this->readQuery(respondMessage, serialTimedOut).toInt();
 }
