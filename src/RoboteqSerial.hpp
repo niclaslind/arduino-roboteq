@@ -100,6 +100,10 @@ public:
     void nextVelocity(uint8_t channel, int32_t value);
     void setUserVarable(uint8_t varNbr, int32_t value);
 
+public:
+    void startDataStream(const char *prefix, const char *delimiter, const char *query, int32_t dataStreamPeriod_ms);
+    bool parseDataStream(String &dataStream, const char *prefix, const char *delimiter, int64_t *dataAsInt64, size_t numOfElements);
+
 private:
     void sendMotorCommand(const char *commandMessage);
     void sendMotorCommand(const char *commandMessage, uint8_t argument);
