@@ -102,7 +102,7 @@ public:
 
 public:
     void startDataStream(const char *prefix, const char *delimiter, const char *query, int32_t dataStreamPeriod_ms);
-    int32_t getDataFromStream(const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen));
+    int32_t getDataFromStream(const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen);
     int32t parseDataStream(String &dataStream, const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen);
 
 private:
