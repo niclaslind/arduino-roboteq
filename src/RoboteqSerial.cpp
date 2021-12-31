@@ -1269,12 +1269,12 @@ void RoboteqSerial::startDataStream(const char *prefix, const char *delimiter, c
     _stream.write("# C_"); // Stop any streams
     _stream.flush();
 
+    _stream.write(streamCmd.c_str()); // Start the stream
+    _stream.flush();
+    
     while(_stream.available()){ // Clear Rx buffer
         _stream.read();
     }
-
-    _stream.write(streamCmd.c_str()); // Start the stream
-    _stream.flush();
 }
 
 /**
