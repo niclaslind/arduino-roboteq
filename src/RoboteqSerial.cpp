@@ -1304,15 +1304,21 @@ int32_t RoboteqSerial::parseDataStream(String &dataStream, const char *prefix, c
     String inputString = dataStream.substring(idxStrtStream+1, idxEndStream);
     size_t numOfElementsFound = 0;
     for(int32_t i=0; i<bufLen; i++){
+        String dataElement;
         int32_t idxDelimiter = inputString.indexOf(delimiter);
-        if(idxDelimiter == -1){
+        if(idxDelimiter == -1){ // This is the last element
+            dataElement = inputString.substring(0, inputString.length());
+            buf[i] = dataElement.toInt();
+            numOfElementsFound++;
             break;
         }
-        String dataElement = inputString.substring(0, idxDelimiter);
-        inputString = inputString.substring(idxDelimiter+1);
+        else{
+            dataElement = inputString.substring(0, idxDelimiter);
+            inputString = inputString.substring(idxDelimiter+1);
 
-        buf[i] = dataElement.toInt();
-        numOfElementsFound++;
+            buf[i] = dataElement.toInt();
+            numOfElementsFound++;
+        }
     }
 
     return numOfElementsFound;
