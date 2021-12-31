@@ -1289,7 +1289,7 @@ void RoboteqSerial::startDataStream(const char *prefix, const char *delimiter, c
 int32_t RoboteqSerial::getDataFromStream(const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen){
     String dataStream;
     while(_stream.available()){
-        dataStream += _stream.read();
+        dataStream += (char)_stream.read();
     }
     return parseDataStream(dataStream, prefix, delimiter, buf, bufLen);
 }
