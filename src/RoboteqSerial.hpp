@@ -102,7 +102,7 @@ public:
 
 public:
     void startDataStream(const char *prefix, const char *delimiter, const char *query, int32_t dataStreamPeriod_ms);
-    bool parseDataStream(String &dataStream, const char *prefix, const char *delimiter, int64_t *dataAsInt64, size_t numOfElements);
+    int32_t parseDataStream(String &dataStream, const char *prefix, const char *delimiter, int64_t *dataAsInt64, size_t numOfElements);
 
 private:
     void sendMotorCommand(const char *commandMessage);
