@@ -102,7 +102,8 @@ public:
 
 public:
     void startDataStream(const char *prefix, const char *delimiter, const char *query, int32_t dataStreamPeriod_ms);
-    int32_t parseDataStream(String &dataStream, const char *prefix, const char *delimiter, int64_t *dataAsInt64, size_t numOfElements);
+    int32_t getDataFromStream(const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen));
+    int32t parseDataStream(String &dataStream, const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen);
 
 private:
     void sendMotorCommand(const char *commandMessage);
@@ -118,6 +119,9 @@ private:
     String handleQueryRequest(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
     int handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut=NULL);
     int handleQueryRequestToInt(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
+
+private:
+
 
 private:
     Stream &_stream;

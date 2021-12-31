@@ -1278,7 +1278,24 @@ void RoboteqSerial::startDataStream(const char *prefix, const char *delimiter, c
 }
 
 /**
- * @brief Splits data stream string into its elements and return each element as int64 data.
+ * @brief Get data from ESC data stream.
+ * 
+ * @param prefix The data stream prefix.
+ * @param delimiter The data stream delimiter.
+ * @param buf The int64 data buffer to write the data to.
+ * @param bufLen The length of the data buffer.
+ * @return int32_t Number of elements found; -1 if error.
+ */
+int32_t RoboteqSerial::getDataFromStream(const char *prefix, const char *delimiter, int64_t *buf, size_t bufLen){
+    String dataStream;
+    while(_stream.available()){
+        dataStream += _stream.read();
+    }
+    return parseDataStream(dataStream, prefix, delimiter, buf, bufLen);
+}
+
+/**
+ * @brief Split data stream string into its elements and return each element as int64 data.
  * 
  * @param dataStream The data stream string.
  * @param prefix The data stream prefix.
