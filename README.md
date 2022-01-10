@@ -1,5 +1,7 @@
 ## Arduino Library for Roboteq Motor Controllers
 
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/niclaslind/library/ArduinoRoboteq.svg)](https://registry.platformio.org/libraries/niclaslind/ArduinoRoboteq)
+
 This project has been created to be able to easily communicate with a Roboteq Controller using an uart port on eg. an Arudino.
 
 ## Getting Started
