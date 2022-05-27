@@ -10,7 +10,7 @@ This project has been created to be able to easily communicate with a Roboteq Co
 
 For platformIO-users, the easiest way is to add this line below in your platformio.ini file
 
-```
+```ini
   lib_deps=
     https://github.com/niclaslind/arduino-roboteq
 ```
@@ -21,7 +21,7 @@ For ArudinoIDE-users, the easiest way is to download this repo and put it in you
 
 ### Runtime-queries
 
-```
+```cpp
     int16_t readMotorAmps();
     int16_t readMotorAmps(uint8_t channel);
     int16_t readAnalogInputAfterConversion(uint8_t channel);
@@ -81,7 +81,7 @@ For ArudinoIDE-users, the easiest way is to download this repo and put it in you
 
 ### Motorcommands
 
-```
+```cpp
     void setAcceleration(uint8_t channel, int32_t value);
     void nextAcceleration(uint8_t channel, int32_t value);
     void setUserBooleanVariable(uint8_t varNbr, bool value);
@@ -114,7 +114,7 @@ For ArudinoIDE-users, the easiest way is to download this repo and put it in you
 
 ### Enum values
 
-```
+```cpp
 enum ReadRawSinCosSensorValue : uint8_t
 {
     SinInput1_SsiInput1 = 1,
@@ -191,7 +191,7 @@ enum ReadVoltsValue : uint8_t
 
 ## How to use
 
-```
+```cpp
 // Initialise a object with the right uart port
 RoboteqSerial roboteqSerial{Serial1};
 
