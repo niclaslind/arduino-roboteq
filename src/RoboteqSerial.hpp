@@ -117,8 +117,8 @@ private:
 private:
     String handleQueryRequest(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut=NULL);
     String handleQueryRequest(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
-    int handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut=NULL);
-    int handleQueryRequestToInt(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
+    int32_t handleQueryRequestToInt(const char *queryMessage, uint8_t extraParameter, const char *respondMessage, bool *serialTimedOut=NULL);
+    int32_t handleQueryRequestToInt(const char *queryMessage, const char *respondMessage, bool *serialTimedOut=NULL);
 
 private:
 
